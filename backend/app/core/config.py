@@ -26,8 +26,11 @@ class Settings(BaseSettings):
 
     @field_validator("DATABASE_URL", "SECRET_KEY", "ADMIN_USERNAME", "ADMIN_PASSWORD", "FRONTEND_URL")
     @classmethod
-    def strip_whitespace(cls, v: str) -> str:
-        return v.strip()
+    def strip_whitespace(cls, v: str, info) -> str:
+        s = v.strip()
+        if info.field_name == "FRONTEND_URL":
+            return s.rstrip("/")
+        return s
 
     model_config = {"env_file": ".env", "extra": "ignore"}
 
