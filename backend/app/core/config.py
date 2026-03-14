@@ -1,3 +1,4 @@
+from pydantic import field_validator
 from pydantic_settings import BaseSettings
 from functools import lru_cache
 
@@ -22,6 +23,11 @@ class Settings(BaseSettings):
 
     # CORS
     FRONTEND_URL: str = "http://localhost:5173"
+
+    @field_validator("DATABASE_URL", "SECRET_KEY", "ADMIN_USERNAME", "ADMIN_PASSWORD", "FRONTEND_URL")
+    @classmethod
+    def strip_whitespace(cls, v: str) -> str:
+        return v.strip()
 
     model_config = {"env_file": ".env", "extra": "ignore"}
 
