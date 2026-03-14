@@ -1,0 +1,119 @@
+from uuid import UUID
+
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, status, Request
+from sqlalchemy.orm import Session
+
+from app.db.session import get_db
+from app.api.deps import get_current_user
+from app.models.usuario import Usuario
+from app.models.practica import Practica
+from app.models.archivo import Archivo
+from app.schemas.archivo import ArchivoResponse
+from app.core.cloudinary import upload_file, delete_file
+from app.core.limiter import limiter
+
+router = APIRouter(tags=["archivos"])
+
+
+@router.post(
+    "/practicas/{practica_id}/archivos",
+    response_model=ArchivoResponse,
+    status_code=status.HTTP_201_CREATED,
+)
+@limiter.limit("20/minute")
+async def upload_archivo(
+    practica_id: UUID,
+    request: Request,
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    current_user: Usuario = Depends(get_current_user),
+):
+    # Verify practica belongs to user
+    practica = (
+        db.query(Practica)
+        .filter(Practica.id == practica_id, Practica.usuario_id == current_user.id)
+        .first()
+    )
+    if not practica:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Práctica no encontrada")
+
+    # Determine file type
+    content_type = file.content_type or ""
+    if content_type.startswith("image/"):
+        tipo = "imagen"
+    elif content_type == "application/pdf":
+        tipo = "pdf"
+    else:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Solo se permiten imágenes y PDFs")
+
+    # Read file and upload to Cloudinary
+    file_bytes = await file.read()
+    tamano_kb = len(file_bytes) // 1024
+    filename = file.filename or "archivo"
+    cloud_result = upload_file(file_bytes, filename, folder=f"labbitacora/{practica_id}")
+    print(f"☁️  Cloudinary Upload Success: {cloud_result['url']}")
+
+    # Save to database
+    archivo = Archivo(
+        practica_id=practica_id,
+        nombre=filename,
+        tipo=tipo,
+        url_cloudinary=cloud_result["url"],
+        public_id=cloud_result["public_id"],
+        tamano_kb=tamano_kb,
+    )
+    db.add(archivo)
+    db.commit()
+    db.refresh(archivo)
+
+    return ArchivoResponse(
+        id=str(archivo.id),
+        practica_id=str(archivo.practica_id),
+        nombre=archivo.nombre,
+        tipo=archivo.tipo,
+        url_cloudinary=archivo.url_cloudinary,
+        tamano_kb=archivo.tamano_kb,
+        created_at=archivo.created_at,
+    )
+
+
+@router.get("/archivos", response_model=list[ArchivoResponse])
+def get_all_archivos(
+    db: Session = Depends(get_db),
+    current_user: Usuario = Depends(get_current_user),
+):
+    """
+    Retrieve all files across all practices belonging to the current user.
+    """
+    # Simplified query for debugging
+    archivos = db.query(Archivo).all()
+    # Filter in memory for now to be 100% sure what's happening
+    user_files = [a for a in archivos if a.practica and a.practica.usuario_id == current_user.id]
+    
+    print(f"📁 DEBUG: Total files in DB: {len(archivos)}")
+    print(f"📁 DEBUG: Files for User {current_user.id}: {len(user_files)}")
+    
+    return user_files
+
+
+@router.delete("/archivos/{archivo_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_archivo(
+    archivo_id: UUID,
+    db: Session = Depends(get_db),
+    current_user: Usuario = Depends(get_current_user),
+):
+    archivo = db.query(Archivo).filter(Archivo.id == archivo_id).first()
+    if not archivo:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Archivo no encontrado")
+
+    # Verify ownership through practica
+    practica = db.query(Practica).filter(
+        Practica.id == archivo.practica_id,
+        Practica.usuario_id == current_user.id,
+    ).first()
+    if not practica:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Sin permisos")
+
+    delete_file(archivo.public_id)
+    db.delete(archivo)
+    db.commit()
