@@ -30,7 +30,7 @@ export default function Login() {
       } else if (err.response?.status === 401) {
         setError("Usuario o contraseña incorrectos");
       } else {
-        setError("Error de conexión con el servidor");
+        setError(`Error de conexión: ${err.message || "Servidor no alcanzable"}`);
       }
     } finally {
       setLoading(false);

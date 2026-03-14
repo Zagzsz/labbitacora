@@ -30,9 +30,13 @@ export function AuthProvider({ children }) {
   }, []);
 
   const login = async (username, password) => {
+    console.log("Attempting login for:", username);
     const res = await api.post("/auth/login", { username, password });
+    console.log("Login POST success");
     localStorage.setItem("token", res.data.access_token);
+    console.log("Token stored, fetching /me...");
     const me = await api.get("/auth/me");
+    console.log("/me fetch success");
     setUser(me.data);
     return me.data;
   };
