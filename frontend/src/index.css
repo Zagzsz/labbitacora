@@ -190,8 +190,21 @@ button {
 }
 
 
-/* ── Link Reset ── */
-a {
-  color: inherit;
-  text-decoration: none;
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  :root {
+    --bg-sidebar: rgba(14, 14, 22, 0.95);
+  }
+  
+  body {
+    font-size: 13px;
+  }
+
+  .card {
+    padding: 16px;
+  }
+
+  .btn-primary, .btn-secondary {
+    padding: 10px 16px;
+  }
 }

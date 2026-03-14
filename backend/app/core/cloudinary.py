@@ -32,7 +32,7 @@ def upload_file(file_bytes: bytes, filename: str, folder: str = "labbitacora") -
         file_bytes,
         folder=folder,
         public_id=public_id_with_ext,
-        resource_type=resource_type,
+        resource_type="auto",
     )
     return {
         "url": result["secure_url"],
@@ -45,9 +45,13 @@ def delete_file(public_id: str) -> bool:
     # We need to handle the case where we don't know the resource_type for deletion
     # But usually 'image' is the default. If not found, it might need 'raw'.
     try:
-        result = cloudinary.uploader.destroy(public_id, resource_type="image")
-        if result.get("result") != "ok":
-            result = cloudinary.uploader.destroy(public_id, resource_type="raw")
-        return result.get("result") == "ok"
+        # 'auto' for upload, but for destroy we need to be more specific if possible.
+        # Cloudinary often treats everything as 'image' or 'raw' unless specified.
+        # Let's try 'video' too.
+        for rtype in ["image", "video", "raw"]:
+            result = cloudinary.uploader.destroy(public_id, resource_type=rtype)
+            if result.get("result") == "ok":
+                return True
+        return False
     except Exception:
         return False

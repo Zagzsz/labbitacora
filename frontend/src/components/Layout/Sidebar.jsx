@@ -24,9 +24,9 @@ export default function Sidebar() {
 
   return (
     <aside style={{
-      width: 250, background: "var(--bg-sidebar)", borderRight: "1px solid var(--border)",
+      width: 250, height: "100%", background: "var(--bg-sidebar)", borderRight: "1px solid var(--border)",
       display: "flex", flexDirection: "column", padding: "24px 16px", flexShrink: 0,
-      backdropFilter: "blur(10px)",
+      backdropFilter: "blur(10px)", overflowY: "auto"
     }}>
       {/* Logo */}
       <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "0 12px", marginBottom: 36 }}>

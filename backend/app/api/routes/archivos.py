@@ -41,10 +41,15 @@ async def upload_archivo(
     content_type = file.content_type or ""
     if content_type.startswith("image/"):
         tipo = "imagen"
+    elif content_type.startswith("video/"):
+        tipo = "video"
     elif content_type == "application/pdf":
         tipo = "pdf"
     else:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Solo se permiten imágenes y PDFs")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, 
+            detail="Solo se permiten imágenes, videos y PDFs"
+        )
 
     # Read file and upload to Cloudinary
     file_bytes = await file.read()

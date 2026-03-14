@@ -167,7 +167,11 @@ export default function PracticaDetalle() {
       </div>
 
       {/* Main Grid Layout */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: 32 }}>
+      <div style={{ 
+        display: "grid", 
+        gridTemplateColumns: window.innerWidth < 1024 ? "1fr" : "1fr 340px", 
+        gap: 32 
+      }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
           {/* Content Sections */}
           {p.objetivo && (
@@ -263,36 +267,54 @@ export default function PracticaDetalle() {
                   </p>
                 ) : (
                   (p.archivos || []).map((a) => (
-                    <div key={a.id} className="glass" style={{
-                      borderRadius: 12, padding: "10px", position: "relative",
-                      display: "flex", gap: 12, alignItems: "center", overflow: "hidden"
-                    }}>
-                      <div style={{ width: 44, height: 44, borderRadius: 8, background: "#16162a", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                        {a.tipo === "imagen" ? (
-                          <img src={a.url_cloudinary} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: 8 }} />
-                        ) : (
-                          <span style={{ fontSize: 20 }}>📄</span>
-                        )}
+                    <div key={a.id} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                      <div className="glass" style={{
+                        borderRadius: 12, padding: "10px", position: "relative",
+                        display: "flex", gap: 12, alignItems: "center", overflow: "hidden"
+                      }}>
+                        <div style={{ width: 44, height: 44, borderRadius: 8, background: "#16162a", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                          {a.tipo === "imagen" ? (
+                            <img src={a.url_cloudinary} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: 8 }} />
+                          ) : a.tipo === "video" ? (
+                            <span style={{ fontSize: 20 }}>🎥</span>
+                          ) : (
+                            <span style={{ fontSize: 20 }}>📄</span>
+                          )}
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <p style={{ fontSize: 13, fontWeight: 500, color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                            {a.nombre}
+                          </p>
+                          <p style={{ fontSize: 11, color: "var(--text-faint)", textTransform: "uppercase" }}>
+                            {a.tipo} • {a.tamano_kb} KB
+                          </p>
+                        </div>
+                        <div style={{ display: "flex", gap: 4 }}>
+                          <a href={a.url_cloudinary} target="_blank" rel="noopener noreferrer" 
+                            style={{ background: "rgba(255,255,255,0.05)", padding: "6px", borderRadius: 8, color: "var(--text-muted)", fontSize: 12, textDecoration: "none" }}>
+                            ↗
+                          </a>
+                          <button onClick={() => handleDeleteArchivo(a.id)}
+                            style={{
+                              background: "rgba(255,77,77,0.1)", border: "none", borderRadius: 8,
+                              color: "#ff4d4d", fontSize: 12, padding: "6px", cursor: "pointer",
+                            }}>✕</button>
+                        </div>
                       </div>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <p style={{ fontSize: 13, fontWeight: 500, color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                          {a.nombre}
-                        </p>
-                        <p style={{ fontSize: 11, color: "var(--text-faint)", textTransform: "uppercase" }}>
-                          {a.tipo} • {a.tamano_kb} KB
-                        </p>
-                      </div>
-                      <div style={{ display: "flex", gap: 4 }}>
-                        <a href={a.url_cloudinary} target="_blank" rel="noopener noreferrer" 
-                          style={{ background: "rgba(255,255,255,0.05)", padding: "6px", borderRadius: 8, color: "var(--text-muted)", fontSize: 12, textDecoration: "none" }}>
-                          ↗
-                        </a>
-                        <button onClick={() => handleDeleteArchivo(a.id)}
-                          style={{
-                            background: "rgba(255,77,77,0.1)", border: "none", borderRadius: 8,
-                            color: "#ff4d4d", fontSize: 12, padding: "6px", cursor: "pointer",
-                          }}>✕</button>
-                      </div>
+                      
+                      {/* Video Player Preview */}
+                      {a.tipo === "video" && (
+                        <div style={{ 
+                          borderRadius: 12, overflow: "hidden", border: "1px solid var(--border)",
+                          background: "#000", position: "relative", paddingTop: "56.25%" 
+                        }}>
+                          <video 
+                            src={a.url_cloudinary} 
+                            controls 
+                            style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
+                          />
+                        </div>
+                      )}
                     </div>
                   ))
                 )}
@@ -305,7 +327,7 @@ export default function PracticaDetalle() {
                 cursor: "pointer", transition: "all 0.2s", textAlign: "center", width: "100%"
               }}>
                 {uploading ? "Sincronizando..." : "＋ Adjuntar Documento"}
-                <input type="file" accept="image/*,.pdf" onChange={handleFileUpload} style={{ display: "none" }} />
+                <input type="file" accept="image/*,.pdf,video/*" onChange={handleFileUpload} style={{ display: "none" }} />
               </label>
             </div>
           </Section>
@@ -319,7 +341,7 @@ export default function PracticaDetalle() {
               </div>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
                 <span style={{ color: "var(--text-faint)" }}>VERSIÓN:</span>
-                <span style={{ color: "#fff" }}>v1.0.4-BETA</span>
+                <span style={{ color: "#fff" }}>v1.0.5-PRO</span>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <span style={{ color: "var(--text-faint)" }}>CIFRADO:</span>
