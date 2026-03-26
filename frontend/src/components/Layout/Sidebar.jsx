@@ -11,6 +11,9 @@ const NAV = [
     { icon: "⊞", label: "Mis prácticas", to: "/practicas" },
     { icon: "📄", label: "Archivos", to: "/archivos" },
   ]},
+  { section: "Administración", adminOnly: true, items: [
+    { icon: "👥", label: "Usuarios", to: "/admin/usuarios" },
+  ]},
 ];
 
 export default function Sidebar() {
@@ -48,7 +51,7 @@ export default function Sidebar() {
       </div>
 
       {/* Nav sections */}
-      {NAV.map((section) => (
+      {NAV.filter(s => !s.adminOnly || user?.is_admin).map((section) => (
         <div key={section.section} style={{ marginBottom: 28 }}>
           <p style={{
             fontSize: 11, color: "var(--text-faint)", fontWeight: 600, letterSpacing: "0.1em",

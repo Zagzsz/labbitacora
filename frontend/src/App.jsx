@@ -11,6 +11,7 @@ import PracticaEditar from "./pages/PracticaEditar";
 import Archivos from "./pages/Archivos";
 import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
+import AdminUsers from "./pages/AdminUsers";
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -52,6 +53,7 @@ function AppRoutes() {
           <Route path="/practicas/:id" element={<PracticaDetalle />} />
           <Route path="/practicas/:id/editar" element={<PracticaEditar />} />
           <Route path="/archivos" element={<Archivos />} />
+          {user?.is_admin && <Route path="/admin/usuarios" element={<AdminUsers />} />}
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
