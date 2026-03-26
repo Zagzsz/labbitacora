@@ -20,18 +20,11 @@ class Settings(BaseSettings):
     # Admin user
     ADMIN_USERNAME: str
     ADMIN_PASSWORD: str
-    ADMIN_EMAIL: str
-
-    # Email
-    EMAIL_FROM: str
-    EMAIL_PASSWORD: str
-    EMAIL_HOST: str = "smtp.gmail.com"
-    EMAIL_PORT: int = 465
 
     # CORS
     FRONTEND_URL: str = "http://localhost:5173"
 
-    @field_validator("DATABASE_URL", "SECRET_KEY", "ADMIN_USERNAME", "ADMIN_PASSWORD", "ADMIN_EMAIL", "EMAIL_FROM", "EMAIL_PASSWORD", "FRONTEND_URL", "ALGORITHM")
+    @field_validator("DATABASE_URL", "SECRET_KEY", "ADMIN_USERNAME", "ADMIN_PASSWORD", "FRONTEND_URL", "ALGORITHM")
     @classmethod
     def strip_whitespace(cls, v: str, info) -> str:
         s = v.strip()
