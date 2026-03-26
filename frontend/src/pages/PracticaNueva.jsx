@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import api from "../api/axios";
 
-const MATERIAS = ["Electrónica", "PLC", "Hidráulica", "Mecánica", "Programación", "Control", "Robótica", "Otra"];
+const MATERIAS = ["Electrónica", "PLC", "Hidráulica", "Mecánica", "Programación", "Control", "Robótica", "Otro..."];
 const ETIQUETAS_SUGERIDAS = ["PLC", "Circuitos", "Bomba de agua", "Sensores", "Arduino", "Simulación", "Laboratorio", "Proyecto final"];
 const STEPS = ["Identificación", "Documentación", "Mediciones"];
 
@@ -237,11 +237,34 @@ export default function PracticaNueva() {
                   />
                 </Field>
                 <Field label="DOMINIO CIENTÍFICO" required>
-                  <select value={form.materia} onChange={e => set("materia", e.target.value)}>
+                  <select 
+                    value={MATERIAS.slice(0, -1).includes(form.materia) ? form.materia : (form.materia ? "Otro..." : "")} 
+                    onChange={e => {
+                      const val = e.target.value;
+                      if (val === "Otro...") {
+                        set("materia", ""); // Trigger custom input mode
+                      } else {
+                        set("materia", val);
+                      }
+                    }}
+                  >
                     <option value="">Seleccionar dominio...</option>
-                    {MATERIAS.map(m => <option key={m}>{m}</option>)}
+                    {MATERIAS.slice(0, -1).map(m => <option key={m} value={m}>{m}</option>)}
+                    <option value="Otro...">Otro (Especificar...)</option>
                   </select>
                 </Field>
+
+                {(!MATERIAS.slice(0, -1).includes(form.materia) && (form.materia !== "" || !MATERIAS.includes(form.materia))) && (
+                  <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} style={{ gridColumn: "span 2" }}>
+                    <Field label="ESPECIFICAR DOMINIO PERSONALIZADO" required hint="Ej: Biotecnología, Termofluidos...">
+                      <input 
+                        placeholder="Ingresa el nombre del dominio o materia"
+                        value={form.materia}
+                        onChange={e => set("materia", e.target.value)}
+                      />
+                    </Field>
+                  </motion.div>
+                )}
                 <Field label="FECHA DE REGISTRO">
                   <input type="date" value={form.fecha} onChange={e => set("fecha", e.target.value)} />
                 </Field>

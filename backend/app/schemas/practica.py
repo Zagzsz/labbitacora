@@ -6,6 +6,9 @@ from pydantic import BaseModel
 
 class PracticaCreate(BaseModel):
     titulo: str
+    materia: str
+    fecha: date
+    etiquetas: List[str] = []
     objetivo: Optional[str] = None
     descripcion: Optional[str] = None
     conclusion: Optional[str] = None
