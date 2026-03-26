@@ -51,9 +51,9 @@ export default function Register() {
       <motion.div 
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-[520px] bg-[#0a0a0c] border border-[#1a1a1f] rounded-[48px] py-20 md:py-24 shadow-2xl px-6"
+        className="w-full max-w-[520px] bg-[#0a0a0c] border border-[#1a1a1f] rounded-[48px] py-16 md:py-24 shadow-2xl px-6"
       >
-        <div className="max-w-[340px] mx-auto w-full">
+        <div style={{ maxWidth: "340px" }} className="mx-auto w-full">
           <div className="text-center mb-16">
             <h1 className="text-4xl font-bold text-white mb-4 tracking-tight">Crear cuenta</h1>
             <p className="text-[15px] text-[#8a8aa3] opacity-80">Únete a LabBitácora</p>

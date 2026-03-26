@@ -61,9 +61,9 @@ export default function Login() {
 
       <motion.div
         variants={pageVariants} initial="hidden" animate="visible"
-        className="w-full max-w-[480px] bg-[#0a0a0c] border border-[#1a1a1f] rounded-[48px] py-20 md:py-24 shadow-2xl px-6"
+        className="w-full max-w-[480px] bg-[#0a0a0c] border border-[#1a1a1f] rounded-[48px] py-16 md:py-24 shadow-2xl px-6"
       >
-        <div className="max-w-[320px] mx-auto w-full">
+        <div style={{ maxWidth: "320px" }} className="mx-auto w-full">
           <div className="text-center mb-16">
             <h1 className="text-4xl font-bold text-white mb-4 tracking-tight">Iniciar sesión</h1>
             <p className="text-[15px] text-[#8a8aa3] opacity-80">Bienvenido de nuevo</p>
