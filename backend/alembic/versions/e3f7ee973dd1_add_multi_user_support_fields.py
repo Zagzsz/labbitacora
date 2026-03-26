@@ -42,8 +42,7 @@ def upgrade() -> None:
     # But since there is likely only one user 'kikin', this works:
     op.execute("UPDATE usuarios SET email = 'admin@labbitacora.com', is_admin = true, is_active = true")
     
-    # Now enforce NOT NULL
-    op.alter_column('usuarios', 'email', nullable=False)
+    # Now enforce NOT NULL for admin/active but leave email nullable
     op.alter_column('usuarios', 'is_admin', nullable=False)
     op.alter_column('usuarios', 'is_active', nullable=False)
     
