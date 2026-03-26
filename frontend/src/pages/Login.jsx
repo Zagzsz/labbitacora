@@ -51,93 +51,74 @@ export default function Login() {
   return (
     <div style={{
       minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center",
-      background: "var(--bg-root)",
+      background: "radial-gradient(circle at center, #111115 0%, #040405 100%)",
+      padding: "20px"
     }}>
       <motion.div
         variants={pageVariants} initial="hidden" animate="visible"
-        style={{
-          width: 360, background: "var(--bg-surface)", border: "1px solid var(--border)",
-          borderRadius: 12, padding: 32,
-        }}
+        className="w-full max-w-[400px] bg-[#0a0a0c] border border-[#1a1a1f] rounded-2xl p-10 shadow-2xl"
       >
-        {/* Logo */}
-        <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 28 }}>
-          <div style={{
-            width: 30, height: 30, background: "var(--bg-elevated)", borderRadius: 8,
-            display: "flex", alignItems: "center", justifyContent: "center",
-          }}>
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <rect width="6" height="6" rx="1.5" fill="#818cf8"/>
-              <rect x="8" width="6" height="6" rx="1.5" fill="#818cf840"/>
-              <rect y="8" width="6" height="6" rx="1.5" fill="#818cf840"/>
-              <rect x="8" y="8" width="6" height="6" rx="1.5" fill="#818cf820"/>
-            </svg>
-          </div>
-          <span style={{ fontSize: 16, fontWeight: 600, color: "var(--text-primary)", letterSpacing: "-0.02em" }}>
-            LabBitácora
-          </span>
+        {/* Logo superior discreto */}
+        <div className="absolute top-8 left-8 flex items-center gap-2 opacity-80">
+          <span className="text-[15px] font-bold text-[#a855f7] tracking-tight">LabBitácora</span>
         </div>
 
-        <p style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 24 }}>
-          Inicia sesión para acceder a tus prácticas
-        </p>
+        <div className="text-center mb-10">
+          <h1 className="text-3xl font-bold text-white mb-2">Iniciar sesión</h1>
+          <p className="text-[14px] text-[#8a8aa3]">Bienvenido de nuevo</p>
+        </div>
 
         {success && (
-          <div style={{
-            background: "rgba(34, 197, 94, 0.1)", border: "1px solid rgba(34, 197, 94, 0.2)",
-            padding: "10px", borderRadius: "8px", color: "#4ade80", fontSize: "12px",
-            textAlign: "center", marginBottom: "20px"
-          }}>
+          <div className="mb-6 p-3 bg-green-500/10 border border-green-500/20 rounded-lg text-green-400 text-[12px] text-center">
             {success}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-          <div>
-            <label style={{ fontSize: 12, fontWeight: 500, color: "var(--text-muted)", marginBottom: 6, display: "block" }}>
+        {error && (
+          <div className="mb-6 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-[12px] text-center">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+          <div className="space-y-2">
+            <label className="text-[11px] font-semibold text-[#a855f7] tracking-widest uppercase ml-1">
               Usuario
             </label>
             <input
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="tu_usuario"
+              placeholder="Tu nombre de usuario"
+              className="w-full bg-black border border-[#1a1a1f] rounded-xl px-4 py-3 text-white focus:border-[#a855f7] outline-none transition-all placeholder:text-[#333]"
               autoFocus
             />
           </div>
-          <div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-              <label style={{ fontSize: 12, fontWeight: 500, color: "var(--text-muted)", marginBottom: 6, display: "block" }}>
-                Contraseña
-              </label>
-              <Link to="/forgot-password" style={{ fontSize: 11, color: "var(--accent)", textDecoration: "none" }}>
-                ¿Olvidaste tu contraseña?
-              </Link>
-            </div>
+
+          <div className="space-y-2">
+            <label className="text-[11px] font-semibold text-[#a855f7] tracking-widest uppercase ml-1">
+              Contraseña
+            </label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
+              className="w-full bg-black border border-[#1a1a1f] rounded-xl px-4 py-3 text-white focus:border-[#a855f7] outline-none transition-all placeholder:text-[#333]"
             />
           </div>
-
-          {error && (
-            <p style={{ fontSize: 12, color: "var(--danger)", textAlign: "center" }}>{error}</p>
-          )}
 
           <button
             type="submit"
             disabled={loading}
-            className="btn-primary"
-            style={{ marginTop: 4, opacity: loading ? 0.6 : 1, width: "100%", padding: "10px 20px" }}
+            className="w-full bg-[#a855f7] hover:bg-[#9333ea] text-black font-semibold py-3.5 rounded-xl transition-all shadow-[0_0_20px_rgba(168,85,247,0.2)] active:scale-[0.98] disabled:opacity-50 mt-2"
           >
-            {loading ? "Entrando..." : "Iniciar sesión"}
+            {loading ? "Ingresando..." : "Ingresar"}
           </button>
         </form>
 
-        <div style={{ marginTop: 24, textAlign: "center", fontSize: 12, color: "var(--text-muted)" }}>
+        <div className="mt-10 text-center text-[13px] text-[#8a8aa3]">
           ¿No tienes una cuenta?{" "}
-          <Link to="/register" style={{ color: "var(--accent)", textDecoration: "none", fontWeight: 500 }}>
+          <Link to="/register" className="text-[#a855f7] hover:underline font-medium">
             Regístrate aquí
           </Link>
         </div>

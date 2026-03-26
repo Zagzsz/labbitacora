@@ -38,15 +38,24 @@ export default function Register() {
   const labelStyle = "block text-[11px] uppercase tracking-wider text-[var(--text-muted)] mb-1 font-medium";
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-[var(--bg-root)]">
+    <div style={{
+      minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center",
+      background: "radial-gradient(circle at center, #111115 0%, #040405 100%)",
+      padding: "20px"
+    }}>
       <motion.div 
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-md bg-[var(--bg-surface)] p-8 rounded-xl border border-[var(--border)] shadow-2xl"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-[420px] bg-[#0a0a0c] border border-[#1a1a1f] rounded-2xl p-10 shadow-2xl"
       >
-        <div className="mb-8 text-center">
-          <h1 className="text-2xl font-semibold text-[var(--text-primary)]">Crear cuenta</h1>
-          <p className="text-[13px] text-[var(--text-muted)] mt-1">Únete a LabBitácora</p>
+        {/* Logo superior discreto */}
+        <div className="absolute top-8 left-8 flex items-center gap-2 opacity-80">
+          <span className="text-[15px] font-bold text-[#a855f7] tracking-tight">LabBitácora</span>
+        </div>
+
+        <div className="text-center mb-10">
+          <h1 className="text-3xl font-bold text-white mb-2">Crear cuenta</h1>
+          <p className="text-[14px] text-[#8a8aa3]">Únete a LabBitácora</p>
         </div>
 
         {error && (
@@ -55,33 +64,38 @@ export default function Register() {
           </div>
         )}
 
-        <form onSubmit={handleRegister} className="space-y-4">
-          <div>
-            <label className={labelStyle}>Usuario</label>
+        <form onSubmit={handleRegister} className="flex flex-col gap-5">
+          <div className="space-y-2">
+            <label className="text-[11px] font-semibold text-[#a855f7] tracking-widest uppercase ml-1">Usuario</label>
             <input
               type="text"
               required
-              className={fieldStyle}
+              placeholder="Ingresa tu usuario"
+              className="w-full bg-black border border-[#1a1a1f] rounded-xl px-4 py-3 text-white focus:border-[#a855f7] outline-none transition-all placeholder:text-[#333]"
               value={formData.username}
               onChange={(e) => setFormData({ ...formData, username: e.target.value })}
             />
           </div>
-          <div>
-            <label className={labelStyle}>Contraseña</label>
+
+          <div className="space-y-2">
+            <label className="text-[11px] font-semibold text-[#a855f7] tracking-widest uppercase ml-1">Contraseña</label>
             <input
               type="password"
               required
-              className={fieldStyle}
+              placeholder="••••••••"
+              className="w-full bg-black border border-[#1a1a1f] rounded-xl px-4 py-3 text-white focus:border-[#a855f7] outline-none transition-all placeholder:text-[#333]"
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
             />
           </div>
-          <div>
-            <label className={labelStyle}>Confirmar Contraseña</label>
+
+          <div className="space-y-2">
+            <label className="text-[11px] font-semibold text-[#a855f7] tracking-widest uppercase ml-1">Confirmar Contraseña</label>
             <input
               type="password"
               required
-              className={fieldStyle}
+              placeholder="••••••••"
+              className="w-full bg-black border border-[#1a1a1f] rounded-xl px-4 py-3 text-white focus:border-[#a855f7] outline-none transition-all placeholder:text-[#333]"
               value={formData.confirmPassword}
               onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
             />
@@ -90,18 +104,18 @@ export default function Register() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[var(--accent)] hover:bg-[#717cf0] text-white py-2.5 rounded-lg text-[13px] font-medium transition-colors shadow-lg active:scale-[0.98] disabled:opacity-50 mt-4"
+            className="w-full bg-[#a855f7] hover:bg-[#9333ea] text-black font-semibold py-3.5 rounded-xl transition-all shadow-[0_0_20px_rgba(168,85,247,0.2)] active:scale-[0.98] disabled:opacity-50 mt-2"
           >
             {loading ? "Registrando..." : "Registrarme"}
           </button>
-
-          <p className="text-center text-[12px] text-[var(--text-muted)] mt-6">
-            ¿Ya tienes una cuenta?{" "}
-            <Link to="/login" className="text-[var(--accent)] hover:underline">
-              Inicia sesión
-            </Link>
-          </p>
         </form>
+
+        <div className="mt-10 text-center text-[13px] text-[#8a8aa3]">
+          ¿Ya tienes una cuenta?{" "}
+          <Link to="/login" className="text-[#a855f7] hover:underline font-medium">
+            Inicia sesión
+          </Link>
+        </div>
       </motion.div>
     </div>
   );
