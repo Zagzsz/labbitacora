@@ -44,6 +44,19 @@ export default function AdminUsers() {
     }
   };
 
+  const handleResetPassword = async (userId) => {
+    const newPassword = window.prompt("Ingresa la nueva contraseña para este usuario (mínimo 6 caracteres):");
+    if (!newPassword) return;
+    if (newPassword.length < 6) return alert("La contraseña es muy corta");
+    
+    try {
+      await api.patch(`/auth/users/${userId}/reset-password`, { new_password: newPassword });
+      alert("Contraseña actualizada con éxito");
+    } catch (err) {
+      alert(err.response?.data?.detail || "Error al resetear contraseña");
+    }
+  };
+
   if (loading) return <div className="text-center py-20 text-[var(--text-muted)]">Cargando usuarios...</div>;
 
   return (
@@ -102,7 +115,14 @@ export default function AdminUsers() {
                     </span>
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <div className="flex justify-end gap-3">
+                    <div className="flex justify-end items-center gap-4">
+                      <button 
+                        onClick={() => handleResetPassword(u.id)}
+                        className="text-[11px] font-bold text-yellow-500 hover:text-yellow-400 transition-colors uppercase"
+                      >
+                        Reset
+                      </button>
+                      
                       {!u.is_active && (
                         <button 
                           onClick={() => handleActivate(u.id)}
@@ -111,6 +131,7 @@ export default function AdminUsers() {
                           Activar
                         </button>
                       )}
+                      
                       {u.id !== currentUser?.id && u.is_active && (
                         <button 
                           onClick={() => handleDeactivate(u.id)}

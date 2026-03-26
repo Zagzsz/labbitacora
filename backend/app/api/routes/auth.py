@@ -62,67 +62,58 @@ def login(data: LoginRequest, request: Request, db: Session = Depends(get_db)):
     return TokenResponse(access_token=token)
 
 
-@router.post("/register", status_code=status.HTTP_201_CREATED)
-@limiter.limit("5/hour")
+@router.post("/register", status_code=status.HTTP_201_CREATED, response_model=UserResponse)
+@limiter.limit("10/hour")
 def register(data: RegisterRequest, request: Request, db: Session = Depends(get_db)):
-    # Check if user exists (either by username or email)
-    user = db.query(Usuario).filter(
-        (Usuario.username == data.username) | (Usuario.email == data.email)
-    ).first()
+    # Check if username exists
+    user = db.query(Usuario).filter(Usuario.username == data.username).first()
     
     if user:
         if user.is_active:
-            detail = "El nombre de usuario ya existe" if user.username == data.username else "El correo ya está registrado"
-            raise HTTPException(status_code=409, detail=detail)
+            raise HTTPException(status_code=409, detail="El nombre de usuario ya está en uso")
         
-        # If user is inactive, they might be retrying because email failed or they didn't verify.
-        # We update their info (in case they changed something) and re-send the code.
-        print(f"🔄 Retrying registration for inactive user: {data.email}")
-        user.username = data.username
-        user.email = data.email
+        # Inactive user retry: update password and reactivate directly
+        print(f"🔄 Reactivating inactive user from registration: {data.username}")
         user.hashed_password = hash_password(data.password)
-    else:
-        print(f"🆕 Creating new user for registration: {data.email}")
-        user = Usuario(
-            username=data.username,
-            email=data.email,
-            hashed_password=hash_password(data.password),
-            is_active=False,
-            is_admin=False
-        )
-        db.add(user)
-    
-    db.flush() # Ensure user has an ID
-    
-    # Generate/Update verification code
-    code = f"{random.randint(100000, 999999)}"
-    expires_at = datetime.now(timezone.utc) + timedelta(minutes=15)
-    
-    # Clean old codes for this email
-    db.query(VerificationCode).filter(
-        VerificationCode.email == data.email, 
-        VerificationCode.purpose == "register"
-    ).update({"used": True})
-    
-    v_code = VerificationCode(
-        email=data.email,
-        code=code,
-        purpose="register",
-        expires_at=expires_at
+        user.is_active = True
+        db.commit()
+        db.refresh(user)
+        return user
+
+    # Create new active user
+    print(f"🆕 Creating new active user: {data.username}")
+    new_user = Usuario(
+        username=data.username,
+        email=data.email, # Optional
+        hashed_password=hash_password(data.password),
+        is_active=True,
+        is_admin=False
     )
-    db.add(v_code)
-    
-    # Try sending email BEFORE final commit
-    if not send_verification_code(data.email, code, "register"):
-        db.rollback() # Don't leave an inactive user if we couldn't even send the code the first time
-        # (Though if they are already in DB from a previous attempt, rollback won't remove them, but it's okay)
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
-            detail="Error al enviar el correo de verificación. Verifica tu email o intenta más tarde."
-        )
-        
+    db.add(new_user)
     db.commit()
-    return {"message": "Código de verificación enviado"}
+    db.refresh(new_user)
+    return new_user
+
+
+@router.patch("/users/{user_id}/reset-password", response_model=UserResponse)
+def admin_reset_password(
+    user_id: uuid.UUID,
+    data: dict, 
+    db: Session = Depends(get_db),
+    admin_user: Usuario = Depends(get_current_admin_user)
+):
+    user = db.query(Usuario).filter(Usuario.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    
+    new_pass = data.get("new_password")
+    if not new_pass or len(new_pass) < 6:
+        raise HTTPException(status_code=400, detail="La contraseña debe tener al menos 6 caracteres")
+        
+    user.hashed_password = hash_password(new_pass)
+    db.commit()
+    db.refresh(user)
+    return user
 
 
 @router.post("/verify-email")
