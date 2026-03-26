@@ -55,47 +55,47 @@ export default function Login() {
       padding: "20px", position: "relative"
     }}>
       {/* Logo en la esquina superior izquierda de la PANTALLA */}
-      <div className="absolute top-10 left-10 flex items-center gap-2 opacity-80 pointer-events-none">
-        <span className="text-[16px] font-bold text-[#a855f7] tracking-tight">LabBitácora</span>
+      <div className="absolute top-12 left-12 flex items-center gap-2 opacity-80 pointer-events-none">
+        <span className="text-[18px] font-bold text-[#a855f7] tracking-tight">LabBitácora</span>
       </div>
 
       <motion.div
         variants={pageVariants} initial="hidden" animate="visible"
-        className="w-full max-w-[400px] bg-[#0a0a0c] border border-[#1a1a1f] rounded-[40px] px-10 py-16 md:px-12 md:py-20 shadow-2xl"
+        className="w-full max-w-[480px] bg-[#0a0a0c] border border-[#1a1a1f] rounded-[48px] px-16 py-20 md:px-20 md:py-24 shadow-2xl"
       >
-        <div className="text-center mb-14">
-          <h1 className="text-3xl font-bold text-white mb-3">Iniciar sesión</h1>
-          <p className="text-[14px] text-[#8a8aa3]">Bienvenido de nuevo</p>
+        <div className="text-center mb-16">
+          <h1 className="text-4xl font-bold text-white mb-4 tracking-tight">Iniciar sesión</h1>
+          <p className="text-[15px] text-[#8a8aa3] opacity-80">Bienvenido de nuevo</p>
         </div>
 
         {success && (
-          <div className="mb-10 p-4 bg-green-500/10 border border-green-500/20 rounded-xl text-green-400 text-[12px] text-center font-medium">
+          <div className="mb-12 p-5 bg-green-500/10 border border-green-500/20 rounded-2xl text-green-400 text-[13px] text-center font-medium">
             {success}
           </div>
         )}
 
         {error && (
-          <div className="mb-10 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-[12px] text-center font-medium">
+          <div className="mb-12 p-5 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-400 text-[13px] text-center font-medium">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-9">
-          <div className="space-y-3">
-            <label className="text-[10px] font-bold text-[#a855f7] tracking-[0.25em] uppercase ml-1 opacity-60">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-10">
+          <div className="space-y-4">
+            <label className="text-[11px] font-bold text-[#a855f7] tracking-[0.3em] uppercase ml-1 opacity-60">
               Usuario
             </label>
             <input
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="Tu nombre de usuario"
-              className="w-full bg-black border border-[#1a1a1f] rounded-2xl px-5 py-4 text-[15px] text-white focus:border-[#a855f7] outline-none transition-all placeholder:text-[#333]"
+              placeholder="Tu usuario"
+              className="w-full bg-black border border-[#1a1a1f] rounded-2xl px-6 py-4.5 text-[16px] text-white focus:border-[#a855f7] outline-none transition-all placeholder:text-[#222]"
               autoFocus
             />
           </div>
 
-          <div className="space-y-3">
-            <label className="text-[10px] font-bold text-[#a855f7] tracking-[0.25em] uppercase ml-1 opacity-60">
+          <div className="space-y-4">
+            <label className="text-[11px] font-bold text-[#a855f7] tracking-[0.3em] uppercase ml-1 opacity-60">
               Contraseña
             </label>
             <input
@@ -103,22 +103,22 @@ export default function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full bg-black border border-[#1a1a1f] rounded-2xl px-5 py-4 text-[15px] text-white focus:border-[#a855f7] outline-none transition-all placeholder:text-[#333]"
+              className="w-full bg-black border border-[#1a1a1f] rounded-2xl px-6 py-4.5 text-[16px] text-white focus:border-[#a855f7] outline-none transition-all placeholder:text-[#222]"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#a855f7] hover:bg-[#9333ea] text-black font-bold py-4 rounded-2xl transition-all shadow-[0_4px_20px_rgba(168,85,247,0.15)] active:scale-[0.98] disabled:opacity-50 mt-4 text-[15px]"
+            className="w-full bg-[#a855f7] hover:bg-[#9333ea] text-black font-bold py-5 rounded-2xl transition-all shadow-[0_4px_30px_rgba(168,85,247,0.2)] active:scale-[0.98] disabled:opacity-50 mt-6 text-[16px] tracking-wide"
           >
             {loading ? "Ingresando..." : "Ingresar"}
           </button>
         </form>
 
-        <div className="mt-14 text-center text-[13px] text-[#8a8aa3]">
+        <div className="mt-16 text-center text-[14px] text-[#8a8aa3]">
           ¿No tienes una cuenta?{" "}
-          <Link to="/register" className="text-[#a855f7] hover:underline font-semibold">
+          <Link to="/register" className="text-[#a855f7] hover:underline font-bold">
             Regístrate aquí
           </Link>
         </div>
