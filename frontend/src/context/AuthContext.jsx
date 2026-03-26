@@ -29,25 +29,27 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
-  const login = async (username, password) => {
-    console.log("Attempting login for:", username);
-    const res = await api.post("/auth/login", { username, password });
-    console.log("Login POST success");
-    localStorage.setItem("token", res.data.access_token);
-    console.log("Token stored, fetching /me...");
-    const me = await api.get("/auth/me");
-    console.log("/me fetch success");
-    setUser(me.data);
-    return me.data;
+  const register = async (username, email, password) => {
+    return await api.post("/auth/register", { username, email, password });
   };
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    setUser(null);
+  const verifyEmail = async (email, code, purpose) => {
+    return await api.post("/auth/verify-email", { email, code, purpose });
+  };
+
+  const forgotPassword = async (email) => {
+    return await api.post("/auth/forgot-password", { email });
+  };
+
+  const resetPassword = async (email, code, new_password) => {
+    return await api.post("/auth/reset-password", { email, code, new_password });
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>
+    <AuthContext.Provider value={{ 
+      user, loading, login, logout, 
+      register, verifyEmail, forgotPassword, resetPassword 
+    }}>
       {children}
     </AuthContext.Provider>
   );

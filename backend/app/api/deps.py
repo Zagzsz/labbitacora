@@ -29,4 +29,21 @@ def get_current_user(
     user = db.query(Usuario).filter(Usuario.id == UUID(user_id)).first()
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Usuario no encontrado")
+    
+    if not user.is_active:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Cuenta desactivada"
+        )
     return user
+
+
+def get_current_admin_user(
+    current_user: Usuario = Depends(get_current_user),
+) -> Usuario:
+    if not current_user.is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Se requieren permisos de administrador"
+        )
+    return current_user

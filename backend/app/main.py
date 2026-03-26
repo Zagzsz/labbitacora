@@ -17,8 +17,8 @@ settings = get_settings()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Create tables on startup
-    Base.metadata.create_all(bind=engine)
+    # Tables are now managed by Alembic
+    # init_db() ensures the initial admin user exists
     init_db()
     yield
 

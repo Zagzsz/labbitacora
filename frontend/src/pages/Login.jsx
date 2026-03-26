@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { motion } from "framer-motion";
 
@@ -11,14 +11,23 @@ const pageVariants = {
 export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (location.state?.message) {
+      setSuccess(location.state.message);
+    }
+  }, [location]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setSuccess("");
     setLoading(true);
     try {
       await login(username, password);
@@ -27,6 +36,8 @@ export default function Login() {
       console.error("Login detail error:", err);
       if (err.response?.status === 429) {
         setError("Demasiados intentos. Por favor, espera un minuto.");
+      } else if (err.response?.status === 403) {
+        setError(err.response.data.detail || "Cuenta desactivada.");
       } else if (err.response?.status === 401) {
         setError("Usuario o contraseña incorrectos");
       } else {
@@ -71,6 +82,16 @@ export default function Login() {
           Inicia sesión para acceder a tus prácticas
         </p>
 
+        {success && (
+          <div style={{
+            background: "rgba(34, 197, 94, 0.1)", border: "1px solid rgba(34, 197, 94, 0.2)",
+            padding: "10px", borderRadius: "8px", color: "#4ade80", fontSize: "12px",
+            textAlign: "center", marginBottom: "20px"
+          }}>
+            {success}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           <div>
             <label style={{ fontSize: 12, fontWeight: 500, color: "var(--text-muted)", marginBottom: 6, display: "block" }}>
@@ -84,9 +105,14 @@ export default function Login() {
             />
           </div>
           <div>
-            <label style={{ fontSize: 12, fontWeight: 500, color: "var(--text-muted)", marginBottom: 6, display: "block" }}>
-              Contraseña
-            </label>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+              <label style={{ fontSize: 12, fontWeight: 500, color: "var(--text-muted)", marginBottom: 6, display: "block" }}>
+                Contraseña
+              </label>
+              <Link to="/forgot-password" style={{ fontSize: 11, color: "var(--accent)", textDecoration: "none" }}>
+                ¿Olvidaste tu contraseña?
+              </Link>
+            </div>
             <input
               type="password"
               value={password}
@@ -108,6 +134,13 @@ export default function Login() {
             {loading ? "Entrando..." : "Iniciar sesión"}
           </button>
         </form>
+
+        <div style={{ marginTop: 24, textAlign: "center", fontSize: 12, color: "var(--text-muted)" }}>
+          ¿No tienes una cuenta?{" "}
+          <Link to="/register" style={{ color: "var(--accent)", textDecoration: "none", fontWeight: 500 }}>
+            Regístrate aquí
+          </Link>
+        </div>
       </motion.div>
     </div>
   );
