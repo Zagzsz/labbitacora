@@ -46,7 +46,7 @@ export default function Register() {
       <motion.div 
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-[420px] bg-[#0a0a0c] border border-[#1a1a1f] rounded-2xl p-10 shadow-2xl"
+        className="w-full max-w-[500px] bg-[#0a0a0c] border border-[#1a1a1f] rounded-[24px] p-12 shadow-2xl"
       >
         {/* Logo superior discreto */}
         <div className="absolute top-8 left-8 flex items-center gap-2 opacity-80">
