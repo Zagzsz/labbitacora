@@ -64,3 +64,7 @@ Thumbs.db
 *.bat
 LabBitacora_Plan.md
 PracticaNueva_Referencia.jsx
+# Backend Debug & Tools
+backend/debug_*.py
+backend/test_api.py
+backend/reset_admin.py
