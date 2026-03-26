@@ -15,12 +15,14 @@ def send_email(to_email: str, subject: str, body: str):
     msg.attach(MIMEText(body, "html"))
 
     try:
+        print(f"📧 Attempting to send email to {to_email} via {settings.EMAIL_HOST}:{settings.EMAIL_PORT}")
         with smtplib.SMTP_SSL(settings.EMAIL_HOST, settings.EMAIL_PORT) as server:
             server.login(settings.EMAIL_FROM, settings.EMAIL_PASSWORD)
             server.send_message(msg)
+        print(f"✅ Email sent successfully to {to_email}")
         return True
     except Exception as e:
-        print(f"❌ Error sending email: {e}")
+        print(f"❌ Error sending email to {to_email}: {e}")
         return False
 
 def send_verification_code(to_email: str, code: str, purpose: str):
