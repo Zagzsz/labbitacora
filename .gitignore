@@ -2,17 +2,28 @@
 
 # Backend
 backend/.env
+backend/.env.*
 backend/venv/
 backend/__pycache__/
+backend/*/__pycache__/
 backend/*.db
 backend/*.sqlite3
+backend/.pytest_cache/
+backend/alembic/versions/__pycache__/
 
 # Frontend
 frontend/node_modules/
 frontend/dist/
 frontend/.env
 frontend/.env.production
+frontend/.env.local
 frontend/.env.*
+
+# IDEs & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
 
 # OS files
 .DS_Store
