@@ -39,11 +39,14 @@ async def upload_archivo(
 
     # Determine file type
     content_type = file.content_type or ""
-    if content_type.startswith("image/"):
+    filename = file.filename or ""
+    ext = filename.split(".")[-1].lower() if "." in filename else ""
+
+    if content_type.startswith("image/") or ext in ["jpg", "jpeg", "png", "gif", "webp"]:
         tipo = "imagen"
-    elif content_type.startswith("video/"):
+    elif content_type.startswith("video/") or ext in ["mov", "mp4", "avi", "mkv"]:
         tipo = "video"
-    elif content_type == "application/pdf":
+    elif content_type == "application/pdf" or ext == "pdf":
         tipo = "pdf"
     else:
         raise HTTPException(

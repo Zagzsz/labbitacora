@@ -66,7 +66,7 @@ export default function Archivos() {
         </div>
         
         <div style={{ display: "flex", gap: 8 }}>
-          {["todos", "imagen", "pdf"].map((t) => (
+          {["todos", "imagen", "video", "pdf"].map((t) => (
             <button
               key={t}
               className={`tag-pill ${tipoFilter === t ? "active" : ""}`}
@@ -103,11 +103,18 @@ export default function Archivos() {
               <div style={{ height: 160, borderRadius: 12, background: "rgba(0,0,0,0.2)", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
                 {a.tipo === "imagen" ? (
                   <img src={a.url_cloudinary} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                ) : a.tipo === "video" ? (
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
+                    <span style={{ fontSize: 48 }}>🎥</span>
+                    <span style={{ fontSize: 11, fontWeight: 700, color: "var(--accent)", background: "var(--accent-glow)", padding: "2px 8px", borderRadius: 4 }}>
+                      VIDEO
+                    </span>
+                  </div>
                 ) : (
                   <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
                     <span style={{ fontSize: 48 }}>📄</span>
                     <span style={{ fontSize: 11, fontWeight: 700, color: "var(--accent)", background: "var(--accent-glow)", padding: "2px 8px", borderRadius: 4 }}>
-                      PDF DOCUMENT
+                      DOCUMENTO PDF
                     </span>
                   </div>
                 )}
