@@ -44,29 +44,29 @@ export default function Register() {
       padding: "20px", position: "relative"
     }}>
       {/* Logo en la esquina superior izquierda de la PANTALLA */}
-      <div className="absolute top-8 left-8 flex items-center gap-2 opacity-80 pointer-events-none">
+      <div className="absolute top-10 left-10 flex items-center gap-2 opacity-80 pointer-events-none">
         <span className="text-[16px] font-bold text-[#a855f7] tracking-tight">LabBitácora</span>
       </div>
 
       <motion.div 
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-[460px] bg-[#0a0a0c] border border-[#1a1a1f] rounded-[32px] p-12 md:p-14 shadow-2xl"
+        className="w-full max-w-[420px] bg-[#0a0a0c] border border-[#1a1a1f] rounded-[40px] px-10 py-16 md:px-12 md:py-20 shadow-2xl"
       >
-        <div className="text-center mb-12">
+        <div className="text-center mb-14">
           <h1 className="text-3xl font-bold text-white mb-3">Crear cuenta</h1>
           <p className="text-[14px] text-[#8a8aa3]">Únete a LabBitácora</p>
         </div>
 
         {error && (
-          <div className="mb-8 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-[12px] text-center font-medium">
+          <div className="mb-10 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-[12px] text-center font-medium">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleRegister} className="flex flex-col gap-6">
+        <form onSubmit={handleRegister} className="flex flex-col gap-8">
           <div className="space-y-3">
-            <label className="text-[11px] font-bold text-[#a855f7] tracking-[0.2em] uppercase ml-1 opacity-70">Usuario</label>
+            <label className="text-[10px] font-bold text-[#a855f7] tracking-[0.25em] uppercase ml-1 opacity-60">Usuario</label>
             <input
               type="text"
               required
@@ -78,7 +78,7 @@ export default function Register() {
           </div>
 
           <div className="space-y-3">
-            <label className="text-[11px] font-bold text-[#a855f7] tracking-[0.2em] uppercase ml-1 opacity-70">Contraseña</label>
+            <label className="text-[10px] font-bold text-[#a855f7] tracking-[0.25em] uppercase ml-1 opacity-60">Contraseña</label>
             <input
               type="password"
               required
@@ -90,7 +90,7 @@ export default function Register() {
           </div>
 
           <div className="space-y-3">
-            <label className="text-[11px] font-bold text-[#a855f7] tracking-[0.2em] uppercase ml-1 opacity-70">Confirmar Contraseña</label>
+            <label className="text-[10px] font-bold text-[#a855f7] tracking-[0.25em] uppercase ml-1 opacity-60">Confirmar Contraseña</label>
             <input
               type="password"
               required
@@ -110,7 +110,7 @@ export default function Register() {
           </button>
         </form>
 
-        <div className="mt-12 text-center text-[13px] text-[#8a8aa3]">
+        <div className="mt-14 text-center text-[13px] text-[#8a8aa3]">
           ¿Ya tienes una cuenta?{" "}
           <Link to="/login" className="text-[#a855f7] hover:underline font-semibold">
             Inicia sesión

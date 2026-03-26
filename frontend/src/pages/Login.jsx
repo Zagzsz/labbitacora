@@ -55,34 +55,34 @@ export default function Login() {
       padding: "20px", position: "relative"
     }}>
       {/* Logo en la esquina superior izquierda de la PANTALLA */}
-      <div className="absolute top-8 left-8 flex items-center gap-2 opacity-80 pointer-events-none">
+      <div className="absolute top-10 left-10 flex items-center gap-2 opacity-80 pointer-events-none">
         <span className="text-[16px] font-bold text-[#a855f7] tracking-tight">LabBitácora</span>
       </div>
 
       <motion.div
         variants={pageVariants} initial="hidden" animate="visible"
-        className="w-full max-w-[440px] bg-[#0a0a0c] border border-[#1a1a1f] rounded-[32px] p-12 md:p-14 shadow-2xl"
+        className="w-full max-w-[400px] bg-[#0a0a0c] border border-[#1a1a1f] rounded-[40px] px-10 py-16 md:px-12 md:py-20 shadow-2xl"
       >
-        <div className="text-center mb-12">
+        <div className="text-center mb-14">
           <h1 className="text-3xl font-bold text-white mb-3">Iniciar sesión</h1>
           <p className="text-[14px] text-[#8a8aa3]">Bienvenido de nuevo</p>
         </div>
 
         {success && (
-          <div className="mb-8 p-4 bg-green-500/10 border border-green-500/20 rounded-xl text-green-400 text-[12px] text-center font-medium">
+          <div className="mb-10 p-4 bg-green-500/10 border border-green-500/20 rounded-xl text-green-400 text-[12px] text-center font-medium">
             {success}
           </div>
         )}
 
         {error && (
-          <div className="mb-8 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-[12px] text-center font-medium">
+          <div className="mb-10 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-[12px] text-center font-medium">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-9">
           <div className="space-y-3">
-            <label className="text-[11px] font-bold text-[#a855f7] tracking-[0.2em] uppercase ml-1 opacity-70">
+            <label className="text-[10px] font-bold text-[#a855f7] tracking-[0.25em] uppercase ml-1 opacity-60">
               Usuario
             </label>
             <input
@@ -95,7 +95,7 @@ export default function Login() {
           </div>
 
           <div className="space-y-3">
-            <label className="text-[11px] font-bold text-[#a855f7] tracking-[0.2em] uppercase ml-1 opacity-70">
+            <label className="text-[10px] font-bold text-[#a855f7] tracking-[0.25em] uppercase ml-1 opacity-60">
               Contraseña
             </label>
             <input
@@ -116,7 +116,7 @@ export default function Login() {
           </button>
         </form>
 
-        <div className="mt-12 text-center text-[13px] text-[#8a8aa3]">
+        <div className="mt-14 text-center text-[13px] text-[#8a8aa3]">
           ¿No tienes una cuenta?{" "}
           <Link to="/register" className="text-[#a855f7] hover:underline font-semibold">
             Regístrate aquí
