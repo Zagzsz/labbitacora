@@ -14,7 +14,7 @@ class PlantillaField(BaseModel):
 class PlantillaBase(BaseModel):
     nombre: str
     descripcion: Optional[str] = None
-    schema_json: List[PlantillaField] = []
+    campos_schema: List[PlantillaField] = []
 
 class PlantillaCreate(PlantillaBase):
     pass

@@ -17,9 +17,9 @@ class Plantilla(Base):
     nombre: Mapped[str] = mapped_column(String, nullable=False)
     descripcion: Mapped[str | None] = mapped_column(Text, nullable=True)
     
-    # schema_json: list of fields. 
+    # campos_schema: list of fields. 
     # Example: [{"id": "p1", "name": "Presión", "type": "number", "unit": "Pa"}]
-    schema_json = mapped_column(JSONB, nullable=False, default=list)
+    campos_schema = mapped_column(JSONB, nullable=False, default=list)
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)

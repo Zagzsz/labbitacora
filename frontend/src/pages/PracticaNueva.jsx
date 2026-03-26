@@ -381,7 +381,7 @@ export default function PracticaNueva() {
                     value={form.conclusion} onChange={e => set("conclusion", e.target.value)} />
                 </Field>
 
-                {selectedPlantilla && selectedPlantilla.schema_json && selectedPlantilla.schema_json.length > 0 && (
+                {selectedPlantilla && selectedPlantilla.campos_schema && selectedPlantilla.campos_schema.length > 0 && (
                   <div style={{ marginTop: 24, padding: 32, background: "rgba(139, 92, 246, 0.03)", borderRadius: 24, border: "1px solid rgba(139, 92, 246, 0.1)" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
                        <span style={{ fontSize: 20 }}>📋</span>
@@ -392,7 +392,7 @@ export default function PracticaNueva() {
                     </div>
                     
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
-                      {selectedPlantilla.schema_json.map(f => (
+                      {selectedPlantilla.campos_schema.map(f => (
                         <Field key={f.id} label={f.name} hint={f.type.toUpperCase()}>
                           {f.type === "text" && (
                             <input 

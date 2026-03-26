@@ -7,7 +7,7 @@ export default function Plantillas() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [newPlantilla, setNewPlantilla] = useState({
-    nombre: "", descripcion: "", schema_json: []
+    nombre: "", descripcion: "", campos_schema: []
   });
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export default function Plantillas() {
       const res = await api.post("/plantillas", newPlantilla);
       setPlantillas([...plantillas, res.data]);
       setShowModal(false);
-      setNewPlantilla({ nombre: "", descripcion: "", schema_json: [] });
+      setNewPlantilla({ nombre: "", descripcion: "", campos_schema: [] });
     } catch (err) {
       console.error(err);
     }
@@ -30,20 +30,20 @@ export default function Plantillas() {
 
   const addField = () => {
     const field = { id: Math.random().toString(36).substr(2, 9), name: "", type: "text", required: false };
-    setNewPlantilla({ ...newPlantilla, schema_json: [...newPlantilla.schema_json, field] });
+    setNewPlantilla({ ...newPlantilla, campos_schema: [...newPlantilla.campos_schema, field] });
   };
 
   const updateField = (id, key, val) => {
     setNewPlantilla({
       ...newPlantilla,
-      schema_json: newPlantilla.schema_json.map(f => f.id === id ? { ...f, [key]: val } : f)
+      campos_schema: newPlantilla.campos_schema.map(f => f.id === id ? { ...f, [key]: val } : f)
     });
   };
 
   const removeField = (id) => {
     setNewPlantilla({
       ...newPlantilla,
-      schema_json: newPlantilla.schema_json.filter(f => f.id !== id)
+      campos_schema: newPlantilla.campos_schema.filter(f => f.id !== id)
     });
   };
 
@@ -76,7 +76,7 @@ export default function Plantillas() {
               <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>{p.nombre}</h3>
               <p style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 20, minHeight: 40 }}>{p.descripcion || "Sin descripción"}</p>
               <div style={{ fontSize: 12, color: "var(--accent)", fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
-                📊 {p.schema_json.length} Campos Personalizados
+                📊 {p.campos_schema.length} Campos Personalizados
               </div>
             </motion.div>
           ))}
@@ -116,7 +116,7 @@ export default function Plantillas() {
                    </div>
                    
                    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                     {newPlantilla.schema_json.map((f, i) => (
+                     {newPlantilla.campos_schema.map((f, i) => (
                        <div key={f.id} style={{ display: "grid", gridTemplateColumns: "1fr 1fr 40px", gap: 10, background: "rgba(255,255,255,0.02)", padding: 12, borderRadius: 12, border: "1px solid var(--border-glass)" }}>
                          <input value={f.name} onChange={e => updateField(f.id, "name", e.target.value)} placeholder="Nombre del campo" style={{ fontSize: 13 }} />
                          <select value={f.type} onChange={e => updateField(f.id, "type", e.target.value)} style={{ fontSize: 13 }}>
