@@ -1,114 +1,81 @@
-# 📓 LabBitácora
+# 📓 LabBitácora CORE
 
-Bitácora digital para documentar prácticas y proyectos de laboratorio de ingeniería mecatrónica. Permite registrar procedimientos, mediciones, archivos adjuntos y notas por práctica, con un panel administrativo para gestionar usuarios.
+Sistema de gestión de investigación digital y bitácora técnica para ingeniería. Diseñado para documentar prácticas de laboratorio, proyectos y experimentos con una estética premium y un enfoque **Mobile-First**.
 
-> 🌐 **Demo en vivo**: [labbitacora.vercel.app](https://labbitacora.vercel.app/)
+> 🌐 **Demo en vivo**: [labbitacora.vercel.app](https://labbitacora.vercel.app/)  
+> 📱 **Optimizado para iOS/iPhone & Android**
 
-## ✨ Características
+## ✨ Características Premium
 
-- 📝 Registro detallado de prácticas de laboratorio
-- 📊 Tablas y gráficas de mediciones numéricas
-- 📎 Subida de archivos (fotos, PDFs) vía Cloudinary
-- 👥 Sistema multi-usuario con roles (Admin / Usuario)
-- 🔐 Autenticación con JWT
-- 🛡️ Panel administrativo para gestión de cuentas
+- 📱 **Diseño Responsivo Total**: Interfaz fluida adaptada a dispositivos móviles con layouts dinámicos y navegación optimizada.
+- 📊 **Telemetría Interactiva**: Gráficas de líneas dinámicas utilizando **Recharts** para visualización de mediciones experimentales.
+- 📎 **Bóveda de Evidencias Pro**: Gestión avanzada de archivos (imágenes, videos, PDFs) con previsualización integrada y soporte para video.
+- 🌐 **Acceso Público Controlado**: Generación de reportes técnicos vía enlaces públicos para visualización externa sin necesidad de cuenta.
+- 📋 **Protocolos de Investigación**: Sistema de plantillas con campos dinámicos para estandarizar el registro según la disciplina (PLC, Programación, etc.).
+- 👥 **Gestión Multi-Usuario**: Roles de Administrador y Usuario con control de acceso por JWT.
 
 ## 🛠️ Stack Tecnológico
 
 | Capa | Tecnología |
 |---|---|
-| Frontend | React + Vite |
-| Backend | Python · FastAPI |
-| Base de datos | PostgreSQL (Aiven) |
-| Archivos | Cloudinary |
-| Deploy | Render |
+| **Frontend** | React + Vite + Framer Motion (Animaciones) |
+| **Backend** | Python · FastAPI |
+| **Visualización** | Recharts (Telemetría de Datos) |
+| **DB** | PostgreSQL (Aiven) |
+| **Storage** | Cloudinary |
+| **Deploy** | Render |
 
-## 🚀 Configuración Local
+## 🚀 Instalación y Configuración Local
 
 ### Prerrequisitos
+- **Python 3.11+**
+- **Node.js 18+**
+- PostgreSQL (Instancia activa)
 
-- Python 3.11+
-- Node.js 18+
-- Una base de datos PostgreSQL (local o remota)
-- Cuenta en Cloudinary
-
-### Backend
-
+### 1. Backend
 ```bash
 cd backend
 python -m venv venv
-# Windows:
-venv\Scripts\activate
+# Activar venv (Windows: venv\Scripts\activate | Unix: source venv/bin/activate)
 pip install -r requirements.txt
-
-# Configurar variables de entorno
-cp .env.example .env  # editar con tus credenciales
-
-# Ejecutar migraciones
+cp .env.example .env  # Configurar con tus credenciales
 alembic upgrade head
-
-# Iniciar servidor
 uvicorn app.main:app --reload
 ```
 
-### Frontend
-
+### 2. Frontend
 ```bash
 cd frontend
 npm install
-
-# Configurar la URL del backend
-cp .env.example .env  # editar VITE_API_URL
-
+cp .env.example .env  # Configurar VITE_API_URL
 npm run dev
 ```
 
-## 🔑 Variables de Entorno (Backend)
+## 🔑 Variables de Entorno (Requeridas)
 
-| Variable | Descripción |
+| Variable | Propósito |
 |---|---|
-| `DATABASE_URL` | URL de conexión a PostgreSQL |
-| `SECRET_KEY` | Clave secreta para firmar JWT |
+| `DATABASE_URL` | String de conexión a PostgreSQL |
+| `SECRET_KEY` | Semilla para firmado de tokens JWT |
 | `ALGORITHM` | Algoritmo JWT (ej. `HS256`) |
-| `ACCESS_TOKEN_EXPIRE_MINUTES` | Duración del token de acceso |
-| `CLOUDINARY_CLOUD_NAME` | Nombre del cloud en Cloudinary |
-| `CLOUDINARY_API_KEY` | API Key de Cloudinary |
-| `CLOUDINARY_API_SECRET` | API Secret de Cloudinary |
-| `ADMIN_USERNAME` | Nombre del usuario administrador inicial |
-| `ADMIN_PASSWORD` | Contraseña del administrador inicial |
-| `FRONTEND_URL` | URL del frontend (para CORS) |
+| `CLOUDINARY_URL` | Configuración base de Cloudinary |
+| `ADMIN_USERNAME/PASSWORD` | Credenciales del primer superusuario |
+| `FRONTEND_URL` | URL de origen permitida en CORS |
 
-## 📁 Estructura del Proyecto
-
+## 📂 Arquitectura de Bitácora
 ```
 LabBitacora/
-├── backend/           # FastAPI + SQLAlchemy
-│   ├── app/
-│   │   ├── api/       # Rutas y dependencias
-│   │   ├── core/      # Seguridad, config, email
-│   │   ├── db/        # Sesión y seed inicial
-│   │   ├── models/    # Modelos SQLAlchemy
-│   │   └── schemas/   # Esquemas Pydantic
-│   └── alembic/       # Migraciones de base de datos
-├── frontend/          # React + Vite
-│   └── src/
-│       ├── api/       # Configuración de Axios
-│       ├── components/# Componentes reutilizables
-│       ├── context/   # Contextos (Auth)
-│       └── pages/     # Páginas de la aplicación
-└── render.yaml        # Configuración de despliegue en Render
+├── backend/           # Lógica Core (FastAPI + SQLAlchemy)
+│   ├── alembic/       # Migraciones y Control de Esquemas
+│   └── app/api        # Endpoints (Prácticas, Proyectos, Plantillas)
+├── frontend/          # Interfaz Premium (React)
+│   ├── src/hooks      # useMobile y lógica de estado
+│   └── src/pages      # Dashboards y Vistas de Investigación
+└── render.yaml        # Blueprint de Despliegue en la Nube
 ```
 
-## 🌐 Despliegue en Render
-
-El archivo `render.yaml` describe la configuración del servicio. Para desplegar:
-
-1. Conecta el repositorio en [render.com](https://render.com).
-2. Configura las variables de entorno listadas arriba en el panel de Render.
-3. Render ejecutará automáticamente el build y el servidor.
-
-> **Nota**: Las migraciones de base de datos se deben ejecutar manualmente desde la Shell del servicio en Render con `alembic upgrade head`, o puedes añadirlo al comando de inicio.
+## 🔐 Seguridad e Higiene
+El repositorio cuenta con políticas estrictas de ignorado para prevenir fugas de secretos (`.env`) y archivos de sistema (`.DS_Store`, `venv`). Todas las credenciales deben gestionarse a través del panel de configuración de Render o variables de sistema.
 
 ---
-
-*Proyecto personal · Ingeniería Mecatrónica*
+*Plataforma de Ingeniería Mecatrónica · Gestión de Datos Científicos*
