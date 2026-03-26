@@ -57,6 +57,6 @@ app.include_router(archivos.router, prefix="/api")
 app.include_router(mediciones.router, prefix="/api")
 
 
-@app.get("/")
+@app.get("/", methods=["GET", "HEAD"])
 def root():
     return {"message": "LabBitácora API v1.0.0"}
