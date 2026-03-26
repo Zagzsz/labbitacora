@@ -1,28 +1,29 @@
 import uuid
 from datetime import date, datetime
-from typing import Optional
+from typing import Optional, List
 from pydantic import BaseModel
 
 
 class PracticaCreate(BaseModel):
     titulo: str
-    materia: str
-    fecha: date
-    descripcion: Optional[str] = None
     objetivo: Optional[str] = None
+    descripcion: Optional[str] = None
     conclusion: Optional[str] = None
-    etiquetas: list[str] = []
+    proyecto_id: Optional[uuid.UUID] = None
+    is_public: bool = False
+    campos_dinamicos: dict = {}
 
 
 class PracticaUpdate(BaseModel):
     titulo: Optional[str] = None
     materia: Optional[str] = None
     fecha: Optional[date] = None
-    descripcion: Optional[str] = None
+    etiquetas: Optional[List[str]] = None
     objetivo: Optional[str] = None
+    descripcion: Optional[str] = None
     conclusion: Optional[str] = None
-    etiquetas: Optional[list[str]] = None
     is_public: Optional[bool] = None
+    campos_dinamicos: Optional[dict] = None
     proyecto_id: Optional[uuid.UUID] = None
 
 
@@ -59,6 +60,7 @@ class PracticaResponse(BaseModel):
     conclusion: Optional[str] = None
     is_public: bool = False
     proyecto_id: Optional[uuid.UUID] = None
+    campos_dinamicos: dict = {}
     created_at: datetime
     updated_at: datetime
     archivos: list[ArchivoResponse] = []
@@ -75,6 +77,7 @@ class PracticaListItem(BaseModel):
     etiquetas: list[str] = []
     is_public: bool = False
     proyecto_id: Optional[uuid.UUID] = None
+    campos_dinamicos: dict = {}
     created_at: datetime
     updated_at: datetime
 

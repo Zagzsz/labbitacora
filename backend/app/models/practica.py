@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime, timezone, date
 
 from sqlalchemy import String, Text, Date, DateTime, ForeignKey
-from sqlalchemy.dialects.postgresql import UUID, ARRAY
+from sqlalchemy.dialects.postgresql import UUID, ARRAY, JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
@@ -28,6 +28,7 @@ class Practica(Base):
     conclusion: Mapped[str | None] = mapped_column(Text, nullable=True)
     etiquetas = mapped_column(ARRAY(String), default=list)
     is_public: Mapped[bool] = mapped_column(default=False)
+    campos_dinamicos = mapped_column(JSONB, default=dict)
     
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
