@@ -61,66 +61,68 @@ export default function Login() {
 
       <motion.div
         variants={pageVariants} initial="hidden" animate="visible"
-        className="w-full max-w-[480px] bg-[#0a0a0c] border border-[#1a1a1f] rounded-[48px] px-16 py-20 md:px-20 md:py-24 shadow-2xl"
+        className="w-full max-w-[480px] bg-[#0a0a0c] border border-[#1a1a1f] rounded-[48px] py-20 md:py-24 shadow-2xl px-6"
       >
-        <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold text-white mb-4 tracking-tight">Iniciar sesión</h1>
-          <p className="text-[15px] text-[#8a8aa3] opacity-80">Bienvenido de nuevo</p>
-        </div>
-
-        {success && (
-          <div className="mb-12 p-5 bg-green-500/10 border border-green-500/20 rounded-2xl text-green-400 text-[13px] text-center font-medium">
-            {success}
-          </div>
-        )}
-
-        {error && (
-          <div className="mb-12 p-5 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-400 text-[13px] text-center font-medium">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="flex flex-col gap-10">
-          <div className="space-y-4">
-            <label className="text-[11px] font-bold text-[#a855f7] tracking-[0.3em] uppercase ml-1 opacity-60">
-              Usuario
-            </label>
-            <input
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Tu usuario"
-              className="w-full bg-black border border-[#1a1a1f] rounded-2xl px-6 py-4.5 text-[16px] text-white focus:border-[#a855f7] outline-none transition-all placeholder:text-[#222]"
-              autoFocus
-            />
+        <div className="max-w-[320px] mx-auto w-full">
+          <div className="text-center mb-16">
+            <h1 className="text-4xl font-bold text-white mb-4 tracking-tight">Iniciar sesión</h1>
+            <p className="text-[15px] text-[#8a8aa3] opacity-80">Bienvenido de nuevo</p>
           </div>
 
-          <div className="space-y-4">
-            <label className="text-[11px] font-bold text-[#a855f7] tracking-[0.3em] uppercase ml-1 opacity-60">
-              Contraseña
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              className="w-full bg-black border border-[#1a1a1f] rounded-2xl px-6 py-4.5 text-[16px] text-white focus:border-[#a855f7] outline-none transition-all placeholder:text-[#222]"
-            />
+          {success && (
+            <div className="mb-12 p-5 bg-green-500/10 border border-green-500/20 rounded-2xl text-green-400 text-[13px] text-center font-medium">
+              {success}
+            </div>
+          )}
+
+          {error && (
+            <div className="mb-12 p-5 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-400 text-[13px] text-center font-medium">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="flex flex-col gap-10">
+            <div className="space-y-4">
+              <label className="text-[11px] font-bold text-[#a855f7] tracking-[0.3em] uppercase ml-1 opacity-60">
+                Usuario
+              </label>
+              <input
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Tu usuario"
+                className="w-full bg-black border border-[#1a1a1f] rounded-2xl px-6 py-4.5 text-[16px] text-white focus:border-[#a855f7] outline-none transition-all placeholder:text-[#222]"
+                autoFocus
+              />
+            </div>
+
+            <div className="space-y-4">
+              <label className="text-[11px] font-bold text-[#a855f7] tracking-[0.3em] uppercase ml-1 opacity-60">
+                Contraseña
+              </label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                className="w-full bg-black border border-[#1a1a1f] rounded-2xl px-6 py-4.5 text-[16px] text-white focus:border-[#a855f7] outline-none transition-all placeholder:text-[#222]"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-[#a855f7] hover:bg-[#9333ea] text-black font-bold py-5 rounded-2xl transition-all shadow-[0_4px_30px_rgba(168,85,247,0.2)] active:scale-[0.98] disabled:opacity-50 mt-6 text-[16px] tracking-wide"
+            >
+              {loading ? "Ingresando..." : "Ingresar"}
+            </button>
+          </form>
+
+          <div className="mt-16 text-center text-[14px] text-[#8a8aa3]">
+            ¿No tienes una cuenta?{" "}
+            <Link to="/register" className="text-[#a855f7] hover:underline font-bold">
+              Regístrate aquí
+            </Link>
           </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-[#a855f7] hover:bg-[#9333ea] text-black font-bold py-5 rounded-2xl transition-all shadow-[0_4px_30px_rgba(168,85,247,0.2)] active:scale-[0.98] disabled:opacity-50 mt-6 text-[16px] tracking-wide"
-          >
-            {loading ? "Ingresando..." : "Ingresar"}
-          </button>
-        </form>
-
-        <div className="mt-16 text-center text-[14px] text-[#8a8aa3]">
-          ¿No tienes una cuenta?{" "}
-          <Link to="/register" className="text-[#a855f7] hover:underline font-bold">
-            Regístrate aquí
-          </Link>
         </div>
       </motion.div>
     </div>

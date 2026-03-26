@@ -51,70 +51,72 @@ export default function Register() {
       <motion.div 
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-[520px] bg-[#0a0a0c] border border-[#1a1a1f] rounded-[48px] px-16 py-20 md:px-20 md:py-24 shadow-2xl"
+        className="w-full max-w-[520px] bg-[#0a0a0c] border border-[#1a1a1f] rounded-[48px] py-20 md:py-24 shadow-2xl px-6"
       >
-        <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold text-white mb-4 tracking-tight">Crear cuenta</h1>
-          <p className="text-[15px] text-[#8a8aa3] opacity-80">Únete a LabBitácora</p>
-        </div>
-
-        {error && (
-          <div className="mb-12 p-5 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-400 text-[13px] text-center font-medium">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleRegister} className="flex flex-col gap-9">
-          <div className="space-y-4">
-            <label className="text-[11px] font-bold text-[#a855f7] tracking-[0.3em] uppercase ml-1 opacity-60">Usuario</label>
-            <input
-              type="text"
-              required
-              placeholder="Tu usuario"
-              className="w-full bg-black border border-[#1a1a1f] rounded-2xl px-6 py-4.5 text-[16px] text-white focus:border-[#a855f7] outline-none transition-all placeholder:text-[#222]"
-              value={formData.username}
-              onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-            />
+        <div className="max-w-[340px] mx-auto w-full">
+          <div className="text-center mb-16">
+            <h1 className="text-4xl font-bold text-white mb-4 tracking-tight">Crear cuenta</h1>
+            <p className="text-[15px] text-[#8a8aa3] opacity-80">Únete a LabBitácora</p>
           </div>
 
-          <div className="space-y-4">
-            <label className="text-[11px] font-bold text-[#a855f7] tracking-[0.3em] uppercase ml-1 opacity-60">Contraseña</label>
-            <input
-              type="password"
-              required
-              placeholder="••••••••"
-              className="w-full bg-black border border-[#1a1a1f] rounded-2xl px-6 py-4.5 text-[16px] text-white focus:border-[#a855f7] outline-none transition-all placeholder:text-[#222]"
-              value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-            />
+          {error && (
+            <div className="mb-12 p-5 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-400 text-[13px] text-center font-medium">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleRegister} className="flex flex-col gap-9">
+            <div className="space-y-4">
+              <label className="text-[11px] font-bold text-[#a855f7] tracking-[0.3em] uppercase ml-1 opacity-60">Usuario</label>
+              <input
+                type="text"
+                required
+                placeholder="Tu usuario"
+                className="w-full bg-black border border-[#1a1a1f] rounded-2xl px-6 py-4.5 text-[16px] text-white focus:border-[#a855f7] outline-none transition-all placeholder:text-[#222]"
+                value={formData.username}
+                onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+              />
+            </div>
+
+            <div className="space-y-4">
+              <label className="text-[11px] font-bold text-[#a855f7] tracking-[0.3em] uppercase ml-1 opacity-60">Contraseña</label>
+              <input
+                type="password"
+                required
+                placeholder="••••••••"
+                className="w-full bg-black border border-[#1a1a1f] rounded-2xl px-6 py-4.5 text-[16px] text-white focus:border-[#a855f7] outline-none transition-all placeholder:text-[#222]"
+                value={formData.password}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              />
+            </div>
+
+            <div className="space-y-4">
+              <label className="text-[11px] font-bold text-[#a855f7] tracking-[0.3em] uppercase ml-1 opacity-60">Confirmar Contraseña</label>
+              <input
+                type="password"
+                required
+                placeholder="••••••••"
+                className="w-full bg-black border border-[#1a1a1f] rounded-2xl px-6 py-4.5 text-[16px] text-white focus:border-[#a855f7] outline-none transition-all placeholder:text-[#222]"
+                value={formData.confirmPassword}
+                onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-[#a855f7] hover:bg-[#9333ea] text-black font-bold py-5 rounded-2xl transition-all shadow-[0_4px_30px_rgba(168,85,247,0.2)] active:scale-[0.98] disabled:opacity-50 mt-6 text-[16px] tracking-wide"
+            >
+              {loading ? "Registrando..." : "Registrarme"}
+            </button>
+          </form>
+
+          <div className="mt-16 text-center text-[14px] text-[#8a8aa3]">
+            ¿Ya tienes una cuenta?{" "}
+            <Link to="/login" className="text-[#a855f7] hover:underline font-bold">
+              Inicia sesión
+            </Link>
           </div>
-
-          <div className="space-y-4">
-            <label className="text-[11px] font-bold text-[#a855f7] tracking-[0.3em] uppercase ml-1 opacity-60">Confirmar Contraseña</label>
-            <input
-              type="password"
-              required
-              placeholder="••••••••"
-              className="w-full bg-black border border-[#1a1a1f] rounded-2xl px-6 py-4.5 text-[16px] text-white focus:border-[#a855f7] outline-none transition-all placeholder:text-[#222]"
-              value={formData.confirmPassword}
-              onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-[#a855f7] hover:bg-[#9333ea] text-black font-bold py-5 rounded-2xl transition-all shadow-[0_4px_30px_rgba(168,85,247,0.2)] active:scale-[0.98] disabled:opacity-50 mt-6 text-[16px] tracking-wide"
-          >
-            {loading ? "Registrando..." : "Registrarme"}
-          </button>
-        </form>
-
-        <div className="mt-16 text-center text-[14px] text-[#8a8aa3]">
-          ¿Ya tienes una cuenta?{" "}
-          <Link to="/login" className="text-[#a855f7] hover:underline font-bold">
-            Inicia sesión
-          </Link>
         </div>
       </motion.div>
     </div>
