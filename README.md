@@ -2,6 +2,8 @@
 
 Bitácora digital para documentar prácticas y proyectos de laboratorio de ingeniería mecatrónica. Permite registrar procedimientos, mediciones, archivos adjuntos y notas por práctica, con un panel administrativo para gestionar usuarios.
 
+> 🌐 **Demo en vivo**: [labbitacora.vercel.app](https://labbitacora.vercel.app/)
+
 ## ✨ Características
 
 - 📝 Registro detallado de prácticas de laboratorio
