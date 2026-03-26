@@ -11,7 +11,7 @@ sys.path.insert(0, os.path.realpath(os.path.join(os.path.dirname(__file__), ".."
 
 from app.core.config import get_settings
 from app.db.base import Base
-from app.models import usuario, practica, archivo, medicion, verification_code, proyecto, plantilla
+from app.models import usuario, practica, archivo, medicion, proyecto, plantilla
 
 settings = get_settings()
 
