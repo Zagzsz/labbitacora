@@ -17,6 +17,9 @@ class Practica(Base):
     usuario_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("usuarios.id"), nullable=False
     )
+    proyecto_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("proyectos.id", ondelete="SET NULL"), nullable=True
+    )
     titulo: Mapped[str] = mapped_column(String, nullable=False)
     materia: Mapped[str] = mapped_column(String, nullable=False)
     fecha: Mapped[date] = mapped_column(Date, nullable=False)
@@ -24,6 +27,8 @@ class Practica(Base):
     objetivo: Mapped[str | None] = mapped_column(Text, nullable=True)
     conclusion: Mapped[str | None] = mapped_column(Text, nullable=True)
     etiquetas = mapped_column(ARRAY(String), default=list)
+    is_public: Mapped[bool] = mapped_column(default=False)
+    
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
     )
@@ -34,5 +39,6 @@ class Practica(Base):
     )
 
     usuario = relationship("Usuario", back_populates="practicas")
+    proyecto = relationship("Proyecto", back_populates="practicas")
     archivos = relationship("Archivo", back_populates="practica", cascade="all, delete-orphan")
     mediciones = relationship("Medicion", back_populates="practica", cascade="all, delete-orphan")

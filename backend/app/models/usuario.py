@@ -30,3 +30,4 @@ class Usuario(Base):
     )
 
     practicas = relationship("Practica", back_populates="usuario", cascade="all, delete-orphan")
+    proyectos = relationship("Proyecto", secondary="proyecto_miembros", back_populates="miembros")
