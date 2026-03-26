@@ -155,6 +155,7 @@ def _to_response(p: Practica) -> PracticaResponse:
         etiquetas=p.etiquetas or [],
         is_public=p.is_public,
         proyecto_id=p.proyecto_id,
+        campos_dinamicos=p.campos_dinamicos or {},
         created_at=p.created_at,
         updated_at=p.updated_at,
         archivos=[

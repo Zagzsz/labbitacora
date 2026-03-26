@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import api from "../api/axios";
@@ -18,6 +18,8 @@ export default function PracticaNueva() {
   const [etiquetaInput, setEtiquetaInput] = useState("");
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [proyectos, setProyectos] = useState([]);
   const [plantillas, setPlantillas] = useState([]);
   const [selectedPlantilla, setSelectedPlantilla] = useState(null);
@@ -33,13 +35,19 @@ export default function PracticaNueva() {
   });
 
   useEffect(() => {
+    setLoading(true);
     Promise.all([
       api.get("/proyectos"),
       api.get("/plantillas")
     ]).then(([projRes, plantRes]) => {
       setProyectos(projRes.data);
       setPlantillas(plantRes.data);
-    }).catch(console.error);
+      setLoading(false);
+    }).catch(err => {
+      console.error(err);
+      setError("Error al cargar dependencias técnicas. Verifica la conexión con el servidor.");
+      setLoading(false);
+    });
   }, []);
   const [medTemp, setMedTemp] = useState({ nombre: "", unidad: "", valores: "" });
 
@@ -92,6 +100,21 @@ export default function PracticaNueva() {
       setSaving(false);
     }
   };
+
+  if (loading) return (
+    <div style={{ padding: 100, textAlign: "center", color: "var(--text-muted)" }}>
+      <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1 }}>⚙️</motion.div>
+      <p style={{ marginTop: 20 }}>Sincronizando protocolos y espacios de investigación...</p>
+    </div>
+  );
+
+  if (error) return (
+    <div style={{ padding: 100, textAlign: "center", color: "var(--danger)" }}>
+      <p style={{ fontSize: 24 }}>⚠️</p>
+      <p>{error}</p>
+      <button className="btn-secondary" onClick={() => window.location.reload()} style={{ marginTop: 20 }}>Reintentar</button>
+    </div>
+  );
 
   return (
     <motion.div variants={pageVariants} initial="hidden" animate="visible" style={{ maxWidth: 900, margin: "0 auto" }}>
