@@ -23,13 +23,20 @@ export default function Practicas() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [tagFilter, setTagFilter] = useState("");
+  const proyectoId = new URLSearchParams(window.location.search).get("proyecto_id");
+  const [proyecto, setProyecto] = useState(null);
 
   useEffect(() => {
-    api.get("/practicas").then((res) => {
+    const url = proyectoId ? `/practicas?proyecto_id=${proyectoId}` : "/practicas";
+    api.get(url).then((res) => {
       setPracticas(res.data);
       setLoading(false);
     }).catch(() => setLoading(false));
-  }, []);
+
+    if (proyectoId) {
+      api.get(`/proyectos/${proyectoId}`).then(res => setProyecto(res.data)).catch(console.error);
+    }
+  }, [proyectoId]);
 
   const getMateriaBg = (materia) => {
     const m = materia?.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") || "";
@@ -60,13 +67,13 @@ export default function Practicas() {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32 }}>
         <div>
           <p style={{ fontSize: 11, color: "var(--text-muted)", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 6 }}>
-            Explorador de Investigación
+            {proyecto ? `Workspace / ${proyecto.nombre}` : "Explorador de Investigación"}
           </p>
           <h1 style={{ fontSize: 28, fontWeight: 700, letterSpacing: "-0.04em", color: "#fff" }}>
-            Mis <span style={{ color: "var(--accent)" }}>Prácticas</span>
+            {proyecto ? "Bitácoras del" : "Mis"} <span style={{ color: "var(--accent)" }}>{proyecto ? "Proyecto" : "Prácticas"}</span>
           </h1>
         </div>
-        <Link to="/practicas/nueva" className="btn-primary" style={{ textDecoration: "none" }}>
+        <Link to={`/practicas/nueva${proyectoId ? `?proyecto_id=${proyectoId}` : ""}`} className="btn-primary" style={{ textDecoration: "none" }}>
           Nueva Práctica
         </Link>
       </div>

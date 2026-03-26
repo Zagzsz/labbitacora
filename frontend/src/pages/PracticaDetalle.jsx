@@ -17,6 +17,14 @@ export default function PracticaDetalle() {
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyLink = () => {
+    const url = `${window.location.origin}/public/${id}`;
+    navigator.clipboard.writeText(url);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const loadPractica = useCallback(() => {
     api.get(`/practicas/${id}`).then((res) => {
@@ -127,10 +135,19 @@ export default function PracticaDetalle() {
                   borderRadius: 8, 
                   fontSize: 12, 
                   fontWeight: 700,
-                  border: "1px solid var(--accent-ring)"
+                  border: "1px solid var(--accent-ring)",
+                  display: "flex", alignItems: "center", gap: 6
                 }}>
                   LAB-PR-{id.substring(0,8).toUpperCase()}
+                  {p.is_public && (
+                    <span style={{ height: 6, width: 6, borderRadius: "50%", background: "var(--accent)", boxShadow: "0 0 5px var(--accent)" }} />
+                  )}
                 </div>
+                {p.is_public && (
+                  <span style={{ fontSize: 10, fontWeight: 800, color: "var(--accent)", background: "rgba(99, 102, 241, 0.1)", padding: "2px 8px", borderRadius: 4, letterSpacing: "0.05em" }}>
+                    ACCESO PÚBLICO
+                  </span>
+                )}
               </div>
               
               <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
@@ -154,6 +171,14 @@ export default function PracticaDetalle() {
             </div>
             
             <div style={{ display: "flex", gap: 10 }}>
+              {p.is_public && (
+                <button className="btn-secondary" onClick={handleCopyLink} style={{ borderColor: copied ? "var(--success)" : "var(--border)" }}>
+                  {copied ? "✓ Enlace Copiado" : "🔗 Compartir"}
+                </button>
+              )}
+              <button className="btn-secondary" onClick={() => window.print()}>
+                📄 Exportar PDF
+              </button>
               <Link to={`/practicas/${id}/editar`} className="btn-secondary" style={{ textDecoration: "none" }}>
                 Modificar Registro
               </Link>

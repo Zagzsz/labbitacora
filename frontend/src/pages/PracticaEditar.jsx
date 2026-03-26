@@ -18,12 +18,17 @@ export default function PracticaEditar() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [etiquetaInput, setEtiquetaInput] = useState("");
+  const [proyectos, setProyectos] = useState([]);
   const [form, setForm] = useState({
     titulo: "", materia: "", fecha: "", etiquetas: [],
     objetivo: "", descripcion: "", conclusion: "",
+    proyecto_id: "", is_public: false,
   });
 
   useEffect(() => {
+    // Cargar proyectos disponibles
+    api.get("/proyectos").then(res => setProyectos(res.data)).catch(console.error);
+
     api.get(`/practicas/${id}`).then((res) => {
       const p = res.data;
       setForm({
@@ -31,6 +36,8 @@ export default function PracticaEditar() {
         etiquetas: p.etiquetas || [],
         objetivo: p.objetivo || "", descripcion: p.descripcion || "",
         conclusion: p.conclusion || "",
+        proyecto_id: p.proyecto_id || "",
+        is_public: p.is_public || false,
       });
       setLoading(false);
     });
@@ -50,7 +57,10 @@ export default function PracticaEditar() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      await api.put(`/practicas/${id}`, form);
+      await api.put(`/practicas/${id}`, {
+        ...form,
+        proyecto_id: form.proyecto_id || null
+      });
       setSaved(true);
       setTimeout(() => navigate(`/practicas/${id}`), 1000);
     } catch (err) {
@@ -94,6 +104,36 @@ export default function PracticaEditar() {
           </Field>
           <Field label="Fecha">
             <input type="date" value={form.fecha} onChange={e => set("fecha", e.target.value)} />
+          </Field>
+          <Field label="Proyecto (Workspace)" hint="Opcional">
+            <select value={form.proyecto_id} onChange={e => set("proyecto_id", e.target.value)}>
+              <option value="">Investigación Independiente</option>
+              {proyectos.map(p => <option key={p.id} value={p.id}>{p.nombre}</option>)}
+            </select>
+          </Field>
+          <Field label="Visibilidad">
+            <div 
+              onClick={() => set("is_public", !form.is_public)}
+              style={{
+                display: "flex", alignItems: "center", gap: 10, cursor: "pointer",
+                padding: "8px 12px", background: "rgba(255,255,255,0.02)", borderRadius: 10,
+                border: "1px solid rgba(255,255,255,0.05)", marginTop: 2
+              }}
+            >
+              <div style={{
+                width: 28, height: 14, borderRadius: 10, background: form.is_public ? "var(--accent)" : "rgba(255,255,255,0.1)",
+                position: "relative", transition: "all 0.2s"
+              }}>
+                <div style={{
+                  width: 10, height: 10, borderRadius: "50%", background: "#fff",
+                  position: "absolute", top: 2, left: form.is_public ? 16 : 2,
+                  transition: "all 0.2s"
+                }} />
+              </div>
+              <span style={{ fontSize: 12, color: form.is_public ? "#fff" : "var(--text-muted)" }}>
+                {form.is_public ? "Acceso Público" : "Privado"}
+              </span>
+            </div>
           </Field>
           <Field label="Etiquetas" span={2}>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>

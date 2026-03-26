@@ -12,6 +12,8 @@ import Archivos from "./pages/Archivos";
 import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
 import AdminUsers from "./pages/AdminUsers";
+import Proyectos from "./pages/Proyectos";
+import PublicPractica from "./pages/PublicPractica";
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -40,6 +42,7 @@ function AppRoutes() {
         <Route path="/login" element={user ? <Navigate to="/" replace /> : <Login />} />
         <Route path="/register" element={user ? <Navigate to="/" replace /> : <Register />} />
         <Route path="/forgot-password" element={user ? <Navigate to="/" replace /> : <ForgotPassword />} />
+        <Route path="/public/:id" element={<PublicPractica />} />
         <Route
           element={
             <ProtectedRoute>
@@ -52,6 +55,7 @@ function AppRoutes() {
           <Route path="/practicas/nueva" element={<PracticaNueva />} />
           <Route path="/practicas/:id" element={<PracticaDetalle />} />
           <Route path="/practicas/:id/editar" element={<PracticaEditar />} />
+          <Route path="/proyectos" element={<Proyectos />} />
           <Route path="/archivos" element={<Archivos />} />
           {user?.is_admin && <Route path="/admin/usuarios" element={<AdminUsers />} />}
         </Route>

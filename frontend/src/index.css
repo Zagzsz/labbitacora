@@ -51,6 +51,46 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* --- PRINT OPTIMIZATION (Scientific PDF Export) --- */
+@media print {
+  .sidebar, .navbar, .btn-primary, .btn-secondary, button, .chip:after, label:after {
+    display: none !important;
+  }
+  
+  body, #root, .app-layout, .main-content {
+    background: #fff !important;
+    color: #000 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: block !important;
+  }
+
+  .card, .glass {
+    background: transparent !important;
+    border: 1px solid #eee !important;
+    box-shadow: none !important;
+    color: #000 !important;
+    break-inside: avoid;
+  }
+
+  h1, h2, h3 { color: #000 !important; }
+  
+  .main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+
+  /* Reset accent colors for clarity on paper */
+  :root {
+    --accent: #2563eb; 
+  }
+
+  a { text-decoration: none !important; color: #000 !important; }
+  
+  .recharts-responsive-container {
+    filter: invert(1) hue-rotate(180deg) brightness(0.8) !important;
+  }
+}
 /* ── Glassmorphism ── */
 .glass {
   background: rgba(24, 24, 42, 0.6);

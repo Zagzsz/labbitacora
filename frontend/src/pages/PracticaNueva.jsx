@@ -18,12 +18,19 @@ export default function PracticaNueva() {
   const [etiquetaInput, setEtiquetaInput] = useState("");
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [proyectos, setProyectos] = useState([]);
   const [form, setForm] = useState({
     titulo: "", materia: "",
     fecha: new Date().toISOString().split("T")[0],
     etiquetas: [], objetivo: "", descripcion: "", conclusion: "",
     mediciones: [],
+    proyecto_id: new URLSearchParams(window.location.search).get("proyecto_id") || "",
+    is_public: false,
   });
+
+  useEffect(() => {
+    api.get("/proyectos").then(res => setProyectos(res.data)).catch(console.error);
+  }, []);
   const [medTemp, setMedTemp] = useState({ nombre: "", unidad: "", valores: "" });
 
   const set = (f, v) => setForm((p) => ({ ...p, [f]: v }));
@@ -53,6 +60,8 @@ export default function PracticaNueva() {
         objetivo: form.objetivo,
         descripcion: form.descripcion,
         conclusion: form.conclusion,
+        proyecto_id: form.proyecto_id || null,
+        is_public: form.is_public
       });
       const practicaId = res.data.id;
 
@@ -201,6 +210,36 @@ export default function PracticaNueva() {
                 </Field>
                 <Field label="FECHA DE REGISTRO">
                   <input type="date" value={form.fecha} onChange={e => set("fecha", e.target.value)} />
+                </Field>
+                <Field label="ASOCIAR A PROYECTO (WORKSPACE)" hint="Opcional">
+                  <select value={form.proyecto_id} onChange={e => set("proyecto_id", e.target.value)}>
+                    <option value="">Investigación Independiente</option>
+                    {proyectos.map(p => <option key={p.id} value={p.id}>{p.nombre}</option>)}
+                  </select>
+                </Field>
+                <Field label="VISIBILIDAD DEL EXPEDIENTE">
+                  <div 
+                    onClick={() => set("is_public", !form.is_public)}
+                    style={{
+                      display: "flex", alignItems: "center", gap: 12, cursor: "pointer",
+                      padding: "10px 16px", background: "rgba(255,255,255,0.02)", borderRadius: 12,
+                      border: "1px solid rgba(255,255,255,0.05)", transition: "all 0.2s"
+                    }}
+                  >
+                    <div style={{
+                      width: 32, height: 18, borderRadius: 10, background: form.is_public ? "var(--accent)" : "rgba(255,255,255,0.1)",
+                      position: "relative", transition: "all 0.2s"
+                    }}>
+                      <div style={{
+                        width: 14, height: 14, borderRadius: "50%", background: "#fff",
+                        position: "absolute", top: 2, left: form.is_public ? 16 : 2,
+                        transition: "all 0.2s"
+                      }} />
+                    </div>
+                    <span style={{ fontSize: 13, color: form.is_public ? "#fff" : "var(--text-muted)", fontWeight: 500 }}>
+                      {form.is_public ? "Acceso Público Activado" : "Privado (Solo tú)"}
+                    </span>
+                  </div>
                 </Field>
                 <Field label="CLASIFICACIÓN POR ETIQUETAS" span={2} hint="Presiona Enter para agregar etiquetas personalizadas">
                   <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 16 }}>

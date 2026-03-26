@@ -9,6 +9,7 @@ const NAV = [
   ]},
   { section: "Investigación", items: [
     { icon: "⊞", label: "Mis prácticas", to: "/practicas" },
+    { icon: "📂", label: "Proyectos", to: "/proyectos" },
     { icon: "📄", label: "Archivos", to: "/archivos" },
   ]},
   { section: "Administración", adminOnly: true, items: [

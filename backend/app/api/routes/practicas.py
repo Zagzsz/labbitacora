@@ -70,6 +70,24 @@ def create_practica(
     return _to_response(practica)
 
 
+@router.get("/{practica_id}/public", response_model=PracticaResponse)
+def get_practica_public(
+    practica_id: UUID,
+    db: Session = Depends(get_db),
+):
+    practica = db.query(Practica).filter(Practica.id == practica_id).first()
+    if not practica:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Práctica no encontrada")
+    
+    if not practica.is_public:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, 
+            detail="Esta práctica es privada y no puede ser visualizada públicamente."
+        )
+        
+    return _to_response(practica)
+
+
 @router.get("/{practica_id}", response_model=PracticaResponse)
 def get_practica(
     practica_id: UUID,
