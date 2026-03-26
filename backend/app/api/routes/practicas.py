@@ -19,22 +19,26 @@ router = APIRouter(prefix="/practicas", tags=["practicas"])
 
 @router.get("", response_model=list[PracticaListItem])
 def list_practicas(
+    proyecto_id: UUID | None = None,
     db: Session = Depends(get_db),
     current_user: Usuario = Depends(get_current_user),
 ):
-    practicas = (
-        db.query(Practica)
-        .filter(Practica.usuario_id == current_user.id)
-        .order_by(Practica.fecha.desc())
-        .all()
-    )
+    query = db.query(Practica).filter(Practica.usuario_id == current_user.id)
+    
+    if proyecto_id:
+        query = query.filter(Practica.proyecto_id == proyecto_id)
+        
+    practicas = query.order_by(Practica.fecha.desc()).all()
+    
     return [
         PracticaListItem(
-            id=str(p.id),
+            id=p.id,
             titulo=p.titulo,
             materia=p.materia,
             fecha=p.fecha,
             etiquetas=p.etiquetas or [],
+            is_public=p.is_public,
+            proyecto_id=p.proyecto_id,
             created_at=p.created_at,
             updated_at=p.updated_at,
         )
@@ -50,6 +54,7 @@ def create_practica(
 ):
     practica = Practica(
         usuario_id=current_user.id,
+        proyecto_id=data.proyecto_id,
         titulo=data.titulo,
         materia=data.materia,
         fecha=data.fecha,
@@ -57,6 +62,7 @@ def create_practica(
         objetivo=data.objetivo,
         conclusion=data.conclusion,
         etiquetas=data.etiquetas,
+        is_public=getattr(data, "is_public", False) # Fallback seguro
     )
     db.add(practica)
     db.commit()
@@ -121,7 +127,7 @@ def _get_or_404(db: Session, practica_id: UUID, usuario_id) -> Practica:
 def _to_response(p: Practica) -> PracticaResponse:
     from app.schemas.practica import ArchivoResponse, MedicionResponse
     return PracticaResponse(
-        id=str(p.id),
+        id=p.id,
         titulo=p.titulo,
         materia=p.materia,
         fecha=p.fecha,
@@ -129,12 +135,14 @@ def _to_response(p: Practica) -> PracticaResponse:
         objetivo=p.objetivo,
         conclusion=p.conclusion,
         etiquetas=p.etiquetas or [],
+        is_public=p.is_public,
+        proyecto_id=p.proyecto_id,
         created_at=p.created_at,
         updated_at=p.updated_at,
         archivos=[
             ArchivoResponse(
-                id=str(a.id), 
-                practica_id=str(p.id),
+                id=a.id, 
+                practica_id=p.id,
                 nombre=a.nombre, 
                 tipo=a.tipo,
                 url_cloudinary=a.url_cloudinary, 
@@ -144,7 +152,7 @@ def _to_response(p: Practica) -> PracticaResponse:
         ],
         mediciones=[
             MedicionResponse(
-                id=str(m.id), nombre_variable=m.nombre_variable, unidad=m.unidad,
+                id=m.id, nombre_variable=m.nombre_variable, unidad=m.unidad,
                 valores=m.valores, timestamps=m.timestamps, notas=m.notas,
                 created_at=m.created_at,
             ) for m in p.mediciones

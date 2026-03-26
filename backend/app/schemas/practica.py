@@ -22,6 +22,8 @@ class PracticaUpdate(BaseModel):
     objetivo: Optional[str] = None
     conclusion: Optional[str] = None
     etiquetas: Optional[list[str]] = None
+    is_public: Optional[bool] = None
+    proyecto_id: Optional[uuid.UUID] = None
 
 
 class ArchivoResponse(BaseModel):
@@ -55,7 +57,8 @@ class PracticaResponse(BaseModel):
     descripcion: Optional[str] = None
     objetivo: Optional[str] = None
     conclusion: Optional[str] = None
-    etiquetas: list[str] = []
+    is_public: bool = False
+    proyecto_id: Optional[uuid.UUID] = None
     created_at: datetime
     updated_at: datetime
     archivos: list[ArchivoResponse] = []
@@ -70,6 +73,8 @@ class PracticaListItem(BaseModel):
     materia: str
     fecha: date
     etiquetas: list[str] = []
+    is_public: bool = False
+    proyecto_id: Optional[uuid.UUID] = None
     created_at: datetime
     updated_at: datetime
 

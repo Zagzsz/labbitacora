@@ -9,7 +9,7 @@ from app.core.config import get_settings
 from app.db.base import Base
 from app.db.session import engine
 from app.db.init_db import init_db
-from app.api.routes import auth, practicas, archivos, mediciones
+from app.api.routes import auth, practicas, archivos, mediciones, proyectos
 from app.core.limiter import limiter
 
 settings = get_settings()
@@ -55,6 +55,7 @@ app.include_router(auth.router, prefix="/api")
 app.include_router(practicas.router, prefix="/api")
 app.include_router(archivos.router, prefix="/api")
 app.include_router(mediciones.router, prefix="/api")
+app.include_router(proyectos.router, prefix="/api")
 
 
 @app.api_route("/", methods=["GET", "HEAD"])
