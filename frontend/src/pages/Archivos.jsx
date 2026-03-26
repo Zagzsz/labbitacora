@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import api from "../api/axios";
 
 const pageVariants = {
@@ -13,6 +13,7 @@ export default function Archivos() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [tipoFilter, setTipoFilter] = useState("todos");
+  const [selectedArchivo, setSelectedArchivo] = useState(null);
 
   useEffect(() => {
     console.log("🔍 Scanning for records in the central vault...");
@@ -118,20 +119,18 @@ export default function Archivos() {
                     </span>
                   </div>
                 )}
-                <a 
-                  href={a.url_cloudinary} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
+                <div
+                  onClick={() => setSelectedArchivo(a)}
                   style={{
                     position: "absolute", inset: 0, background: "rgba(0,0,0,0)",
                     display: "flex", alignItems: "center", justifyContent: "center",
-                    transition: "background 0.2s", textDecoration: "none", zIndex: 1
+                    transition: "background 0.2s", cursor: "pointer", zIndex: 1
                   }}
                   onMouseOver={(e) => e.currentTarget.style.background = "rgba(0,0,0,0.4)"}
                   onMouseOut={(e) => e.currentTarget.style.background = "rgba(0,0,0,0)"}
                 >
-                  <span style={{ color: "#fff", fontWeight: 700, opacity: 0, transition: "opacity 0.2s" }}>ABRIR RECURSO</span>
-                </a>
+                  <span style={{ color: "#fff", fontWeight: 700, opacity: 0, transition: "opacity 0.2s" }}>VER RECURSO</span>
+                </div>
               </div>
               
               <div>
@@ -158,6 +157,73 @@ export default function Archivos() {
           ))}
         </div>
       )}
+
+      {/* File Preview Modal */}
+      <AnimatePresence>
+        {selectedArchivo && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedArchivo(null)}
+            style={{
+              position: "fixed", inset: 0, background: "rgba(0,0,0,0.9)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              zIndex: 1000, padding: 40, backdropFilter: "blur(10px)"
+            }}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                maxWidth: "90%", maxHeight: "90%", position: "relative",
+                display: "flex", flexDirection: "column", alignItems: "center", gap: 20
+              }}
+            >
+              {selectedArchivo.tipo === "imagen" ? (
+                <img 
+                  src={selectedArchivo.url_cloudinary} 
+                  alt={selectedArchivo.nombre}
+                  style={{ maxWidth: "100%", maxHeight: "80vh", borderRadius: 12, boxShadow: "0 20px 40px rgba(0,0,0,0.5)" }} 
+                />
+              ) : selectedArchivo.tipo === "video" ? (
+                <video 
+                  src={selectedArchivo.url_cloudinary} 
+                  controls 
+                  autoPlay
+                  style={{ maxWidth: "100%", maxHeight: "80vh", borderRadius: 12, boxShadow: "0 20px 40px rgba(0,0,0,0.5)" }} 
+                />
+              ) : (
+                <div className="card" style={{ padding: 40, textAlign: "center" }}>
+                   <span style={{ fontSize: 64, marginBottom: 20, display: "block" }}>📄</span>
+                   <p style={{ color: "#fff", marginBottom: 20 }}>Este documento PDF debe abrirse en una nueva ventana.</p>
+                   <a href={selectedArchivo.url_cloudinary} target="_blank" rel="noreferrer" className="btn-primary" style={{ textDecoration: "none" }}>Abrir PDF</a>
+                </div>
+              )}
+              
+              <div style={{ textAlign: "center" }}>
+                <h3 style={{ color: "#fff", margin: "0 0 5px 0" }}>{selectedArchivo.nombre}</h3>
+                <p style={{ color: "var(--text-faint)", fontSize: 13, margin: 0 }}>
+                  {selectedArchivo.tamano_kb} KB • {new Date(selectedArchivo.created_at).toLocaleDateString()}
+                </p>
+              </div>
+
+              <button 
+                onClick={() => setSelectedArchivo(null)}
+                style={{
+                  position: "absolute", top: -20, right: -20, background: "var(--accent)",
+                  border: "none", width: 32, height: 32, borderRadius: "50%", color: "#000",
+                  fontWeight: 900, cursor: "pointer", boxShadow: "0 0 15px var(--accent)"
+                }}
+              >
+                ✕
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
