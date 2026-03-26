@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import ReactMarkdown from "react-markdown";
 import api from "../api/axios";
+import useMobile from "../hooks/useMobile";
 
 const pageVariants = {
   hidden: { opacity: 0, y: 8 },
@@ -18,6 +19,7 @@ export default function PracticaDetalle() {
   const [deleting, setDeleting] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [copied, setCopied] = useState(false);
+  const isMobile = useMobile(1024);
 
   const handleCopyLink = () => {
     const url = `${window.location.origin}/public/${id}`;
@@ -115,39 +117,50 @@ export default function PracticaDetalle() {
           background: "linear-gradient(180deg, rgba(14,14,22,0.6) 0%, rgba(14,14,22,0.98) 100%)",
         }} />
 
-        <div style={{ position: "relative", padding: "40px 32px" }}>
-          <p style={{ fontSize: 11, color: "var(--text-faint)", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 16 }}>
+        <div style={{ position: "relative", padding: isMobile ? "32px 20px" : "40px 32px" }}>
+          <p style={{ fontSize: 10, color: "var(--text-faint)", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 16 }}>
             <Link to="/" style={{ color: "inherit", textDecoration: "none" }}>REGISTROS CORE</Link>
             <span style={{ margin: "0 8px", opacity: 0.3 }}>/</span>
             EXPEDIENTE TÉCNICO
           </p>
           
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+          <div style={{ 
+            display: "flex", 
+            flexDirection: isMobile ? "column" : "row",
+            justifyContent: "space-between", 
+            alignItems: isMobile ? "flex-start" : "flex-end",
+            gap: isMobile ? 24 : 0
+          }}>
             <div>
-              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
-                <h1 style={{ fontSize: 32, fontWeight: 700, letterSpacing: "-0.04em", color: "#fff", margin: 0 }}>
+              <div style={{ 
+                display: "flex", 
+                flexDirection: isMobile ? "column" : "row",
+                alignItems: isMobile ? "flex-start" : "center", 
+                gap: 12, 
+                marginBottom: 8 
+              }}>
+                <h1 style={{ fontSize: isMobile ? 24 : 32, fontWeight: 700, letterSpacing: "-0.04em", color: "#fff", margin: 0 }}>
                   {p.titulo}
                 </h1>
-                <div style={{ 
-                  background: "var(--accent-glow)", 
-                  color: "var(--accent)", 
-                  padding: "4px 10px", 
-                  borderRadius: 8, 
-                  fontSize: 12, 
-                  fontWeight: 700,
-                  border: "1px solid var(--accent-ring)",
-                  display: "flex", alignItems: "center", gap: 6
-                }}>
-                  LAB-PR-{id.substring(0,8).toUpperCase()}
+                <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                  <div style={{ 
+                    background: "var(--accent-glow)", 
+                    color: "var(--accent)", 
+                    padding: "4px 10px", 
+                    borderRadius: 8, 
+                    fontSize: 11, 
+                    fontWeight: 700,
+                    border: "1px solid var(--accent-ring)",
+                    display: "flex", alignItems: "center", gap: 6
+                  }}>
+                    LAB-PR-{id.substring(0,8).toUpperCase()}
+                  </div>
                   {p.is_public && (
-                    <span style={{ height: 6, width: 6, borderRadius: "50%", background: "var(--accent)", boxShadow: "0 0 5px var(--accent)" }} />
+                    <span style={{ fontSize: 9, fontWeight: 800, color: "var(--accent)", background: "rgba(99, 102, 241, 0.1)", padding: "2px 8px", borderRadius: 4, letterSpacing: "0.05em" }}>
+                      ACCESO PÚBLICO
+                    </span>
                   )}
                 </div>
-                {p.is_public && (
-                  <span style={{ fontSize: 10, fontWeight: 800, color: "var(--accent)", background: "rgba(99, 102, 241, 0.1)", padding: "2px 8px", borderRadius: 4, letterSpacing: "0.05em" }}>
-                    ACCESO PÚBLICO
-                  </span>
-                )}
               </div>
               
               <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
@@ -170,20 +183,25 @@ export default function PracticaDetalle() {
               )}
             </div>
             
-            <div style={{ display: "flex", gap: 10 }}>
+            <div style={{ 
+              display: "flex", 
+              gap: 10, 
+              flexWrap: "wrap",
+              width: isMobile ? "100%" : "auto"
+            }}>
               {p.is_public && (
-                <button className="btn-secondary" onClick={handleCopyLink} style={{ borderColor: copied ? "var(--success)" : "var(--border)" }}>
-                  {copied ? "✓ Enlace Copiado" : "🔗 Compartir"}
+                <button className="btn-secondary" onClick={handleCopyLink} style={{ flex: isMobile ? 1 : "initial", borderColor: copied ? "var(--success)" : "var(--border)" }}>
+                  {copied ? "✓ Copiado" : "🔗 Compartir"}
                 </button>
               )}
-              <button className="btn-secondary" onClick={() => window.print()}>
-                📄 Exportar PDF
+              <button className="btn-secondary" onClick={() => window.print()} style={{ flex: isMobile ? 1 : "initial" }}>
+                📄 PDF
               </button>
-              <Link to={`/practicas/${id}/editar`} className="btn-secondary" style={{ textDecoration: "none" }}>
-                Modificar Registro
+              <Link to={`/practicas/${id}/editar`} className="btn-secondary" style={{ flex: isMobile ? 1 : "initial", textDecoration: "none", textAlign: "center" }}>
+                Editar
               </Link>
               <button className="btn-secondary" onClick={handleDelete} disabled={deleting}
-                style={{ color: deleting ? "var(--text-faint)" : "#ff4d4d", borderColor: "rgba(255, 77, 77, 0.2)" }}>
+                style={{ flex: isMobile ? "1 1 100%" : "initial", color: deleting ? "var(--text-faint)" : "#ff4d4d", borderColor: "rgba(255, 77, 77, 0.2)" }}>
                 {deleting ? "Eliminando..." : "Eliminar Registro"}
               </button>
             </div>
@@ -194,8 +212,8 @@ export default function PracticaDetalle() {
       {/* Main Grid Layout */}
       <div style={{ 
         display: "grid", 
-        gridTemplateColumns: window.innerWidth < 1024 ? "1fr" : "1fr 340px", 
-        gap: 32 
+        gridTemplateColumns: isMobile ? "1fr" : "1fr 340px", 
+        gap: isMobile ? 24 : 32 
       }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
           {/* Content Sections */}
@@ -213,7 +231,11 @@ export default function PracticaDetalle() {
 
           {p.campos_dinamicos && Object.keys(p.campos_dinamicos).length > 0 && (
             <Section title="Protocolo de Datos Personalizado">
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+              <div style={{ 
+                display: "grid", 
+                gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", 
+                gap: isMobile ? 12 : 20 
+              }}>
                 {Object.entries(p.campos_dinamicos).map(([id, val]) => (
                   <div key={id} className="card" style={{ padding: "16px 20px", display: "flex", flexDirection: "column", gap: 6, background: "rgba(139, 92, 246, 0.03)", border: "1px solid rgba(139, 92, 246, 0.1)" }}>
                     <span style={{ fontSize: 10, fontWeight: 700, color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.05em" }}>

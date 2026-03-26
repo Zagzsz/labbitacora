@@ -55,18 +55,18 @@ export default function Login() {
       padding: "20px", position: "relative"
     }}>
       {/* Logo en la esquina superior izquierda de la PANTALLA */}
-      <div className="absolute top-12 left-12 flex items-center gap-2 opacity-80 pointer-events-none">
+      <div className="absolute top-6 left-6 md:top-12 md:left-12 flex items-center gap-2 opacity-80 pointer-events-none">
         <span className="text-[18px] font-bold text-[#a855f7] tracking-tight">LabBitácora</span>
       </div>
 
       <motion.div
         variants={pageVariants} initial="hidden" animate="visible"
-        className="w-full max-w-[480px] bg-[#0a0a0c] border border-[#1a1a1f] rounded-[48px] py-16 md:py-24 shadow-2xl px-6 flex flex-col items-center"
+        className="w-full max-w-[480px] bg-[#0a0a0c] border border-[#1a1a1f] rounded-[32px] md:rounded-[48px] py-12 md:py-24 shadow-2xl px-6 flex flex-col items-center"
       >
         <div style={{ maxWidth: "320px" }} className="w-full">
-          <div className="text-center mb-16">
-            <h1 className="text-4xl font-bold text-white mb-4 tracking-tight">Iniciar sesión</h1>
-            <p className="text-[15px] text-[#8a8aa3] opacity-80">Bienvenido de nuevo</p>
+          <div className="text-center mb-10 md:mb-16">
+            <h1 className="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight">Iniciar sesión</h1>
+            <p className="text-[14px] md:text-[15px] text-[#8a8aa3] opacity-80">Bienvenido de nuevo</p>
           </div>
 
           {success && (
@@ -76,7 +76,7 @@ export default function Login() {
           )}
 
           {error && (
-            <div className="mb-12 p-5 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-400 text-[13px] text-center font-medium">
+            <div className="mb-8 md:mb-12 p-4 md:p-5 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-400 text-[13px] text-center font-medium">
               {error}
             </div>
           )}
@@ -111,7 +111,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#a855f7] hover:bg-[#9333ea] text-black font-bold py-5 rounded-2xl transition-all shadow-[0_4px_30px_rgba(168,85,247,0.2)] active:scale-[0.98] disabled:opacity-50 mt-6 text-[16px] tracking-wide"
+              className="w-full bg-[#a855f7] hover:bg-[#9333ea] text-black font-bold py-4 md:py-5 rounded-2xl transition-all shadow-[0_4px_30px_rgba(168,85,247,0.2)] active:scale-[0.98] disabled:opacity-50 mt-4 md:mt-6 text-[16px] tracking-wide"
             >
               {loading ? "Ingresando..." : "Ingresar"}
             </button>

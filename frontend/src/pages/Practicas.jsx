@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import api from "../api/axios";
+import useMobile from "../hooks/useMobile";
 
 const pageVariants = {
   hidden: { opacity: 0, y: 8 },
@@ -25,6 +26,7 @@ export default function Practicas() {
   const [tagFilter, setTagFilter] = useState("");
   const proyectoId = new URLSearchParams(window.location.search).get("proyecto_id");
   const [proyecto, setProyecto] = useState(null);
+  const isMobile = useMobile(1024);
 
   useEffect(() => {
     const url = proyectoId ? `/practicas?proyecto_id=${proyectoId}` : "/practicas";
@@ -64,16 +66,23 @@ export default function Practicas() {
   return (
     <motion.div variants={pageVariants} initial="hidden" animate="visible" style={{ maxWidth: 1200, margin: "0 auto" }}>
       {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32 }}>
+      <div style={{ 
+        display: "flex", 
+        flexDirection: isMobile ? "column" : "row",
+        justifyContent: "space-between", 
+        alignItems: isMobile ? "flex-start" : "center", 
+        gap: isMobile ? 20 : 0,
+        marginBottom: 32 
+      }}>
         <div>
-          <p style={{ fontSize: 11, color: "var(--text-muted)", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 6 }}>
+          <p style={{ fontSize: 10, color: "var(--text-muted)", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 6 }}>
             {proyecto ? `Workspace / ${proyecto.nombre}` : "Explorador de Investigación"}
           </p>
-          <h1 style={{ fontSize: 28, fontWeight: 700, letterSpacing: "-0.04em", color: "#fff" }}>
+          <h1 style={{ fontSize: isMobile ? 24 : 28, fontWeight: 700, letterSpacing: "-0.04em", color: "#fff" }}>
             {proyecto ? "Bitácoras del" : "Mis"} <span style={{ color: "var(--accent)" }}>{proyecto ? "Proyecto" : "Prácticas"}</span>
           </h1>
         </div>
-        <Link to={`/practicas/nueva${proyectoId ? `?proyecto_id=${proyectoId}` : ""}`} className="btn-primary" style={{ textDecoration: "none" }}>
+        <Link to={`/practicas/nueva${proyectoId ? `?proyecto_id=${proyectoId}` : ""}`} className="btn-primary" style={{ width: isMobile ? "100%" : "auto", textAlign: "center", textDecoration: "none" }}>
           Nueva Práctica
         </Link>
       </div>
@@ -120,7 +129,11 @@ export default function Practicas() {
       ) : (
         <motion.div
           variants={container} initial="hidden" animate="visible"
-          style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 20 }}
+          style={{ 
+            display: "grid", 
+            gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fill, minmax(280px, 1fr))", 
+            gap: isMobile ? 16 : 20 
+          }}
         >
           {filtered.map((p) => (
             <motion.div key={p.id} variants={cardVariant}>

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import api from "../api/axios";
+import useMobile from "../hooks/useMobile";
 
 const pageVariants = {
   hidden: { opacity: 0, y: 8 },
@@ -26,6 +27,7 @@ export default function Dashboard() {
   const [user, setUser] = useState(null);
   const [recentFiles, setRecentFiles] = useState([]);
   const [profileSaving, setProfileSaving] = useState(false);
+  const isMobile = useMobile(1024);
 
   useEffect(() => {
     // Original fetches
@@ -72,12 +74,24 @@ export default function Dashboard() {
 
   return (
     <motion.div variants={pageVariants} initial="hidden" animate="visible" style={{ maxWidth: 1400, margin: "0 auto" }}>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: 32, alignItems: "start" }}>
+      <div style={{ 
+        display: "grid", 
+        gridTemplateColumns: isMobile ? "1fr" : "1fr 340px", 
+        gap: isMobile ? 24 : 32, 
+        alignItems: "start" 
+      }}>
         
         {/* Main Content */}
         <div>
           {/* Header */}
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32 }}>
+          <div style={{ 
+            display: "flex", 
+            flexDirection: isMobile ? "column" : "row",
+            justifyContent: "space-between", 
+            alignItems: isMobile ? "flex-start" : "center", 
+            gap: isMobile ? 20 : 0,
+            marginBottom: 32 
+          }}>
             <div>
               <p style={{ fontSize: 11, color: "var(--text-muted)", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 6 }}>
                 Escritorio del Investigador
@@ -115,7 +129,15 @@ export default function Dashboard() {
                     <div className="card" style={{ position: "relative", overflow: "hidden", padding: "24px" }}>
                       <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${getMateriaBg(p.materia)})`, backgroundSize: "cover", opacity: 0.15, backgroundPosition: "center" }} />
                       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, #161626 30%, transparent 100%)" }} />
-                      <div style={{ position: "relative", zIndex: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <div style={{ 
+                        position: "relative", 
+                        zIndex: 2, 
+                        display: "flex", 
+                        flexDirection: isMobile ? "column" : "row",
+                        justifyContent: "space-between", 
+                        alignItems: isMobile ? "flex-start" : "center",
+                        gap: isMobile ? 12 : 0
+                      }}>
                         <div>
                           <p style={{ fontSize: 10, color: "var(--accent)", fontWeight: 700, textTransform: "uppercase", marginBottom: 4 }}>{p.materia}</p>
                           <h3 style={{ fontSize: 18, fontWeight: 700, color: "#fff" }}>{p.titulo}</h3>
@@ -143,7 +165,7 @@ export default function Dashboard() {
         </div>
 
         {/* Right Sidebar - Researcher Profile */}
-        <aside style={{ position: "sticky", top: 20 }}>
+        <aside style={{ position: isMobile ? "static" : "sticky", top: 20 }}>
           <div className="card" style={{ background: "rgba(147, 13, 242, 0.03)", border: "1px solid rgba(147, 13, 242, 0.1)" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 24 }}>
               <div style={{ width: 56, height: 56, borderRadius: "50%", background: "var(--accent-glow)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24, border: "2px solid var(--accent)" }}>

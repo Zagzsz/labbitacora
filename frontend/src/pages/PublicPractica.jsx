@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import ReactMarkdown from "react-markdown";
 import api from "../api/axios"; // Usamos la instancia configurada
+import useMobile from "../hooks/useMobile";
 
 const pageVariants = {
   hidden: { opacity: 0, y: 15 },
@@ -14,6 +14,7 @@ export default function PublicPractica() {
   const [practica, setPractica] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const isMobile = useMobile(1024);
 
   useEffect(() => {
     console.log("Iniciando carga de práctica pública ID:", id);
@@ -55,25 +56,42 @@ export default function PublicPractica() {
   );
 
   return (
-    <div style={{ minHeight: "100vh", background: "#0e0e16", color: "#fff", padding: "60px 20px" }}>
+    <div style={{ 
+      minHeight: "100vh", 
+      background: "#0e0e16", 
+      color: "#fff", 
+      padding: isMobile ? "24px 16px" : "60px 24px" 
+    }}>
       <motion.div 
         variants={pageVariants} initial="hidden" animate="visible"
         style={{ maxWidth: 900, margin: "0 auto" }}
       >
         {/* Institutional Header */}
-        <header style={{ borderBottom: "1px solid rgba(255,255,255,0.05)", paddingBottom: 40, marginBottom: 48 }}>
+        <header style={{ 
+          borderBottom: "1px solid rgba(255,255,255,0.05)", 
+          paddingBottom: 40, 
+          marginBottom: 48,
+          textAlign: isMobile ? "left" : "left"
+        }}>
            <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 20 }}>
              <div style={{ width: 14, height: 14, borderRadius: "50%", background: "var(--accent)", boxShadow: "0 0 15px var(--accent)" }} />
-             <span style={{ fontSize: 11, fontWeight: 700, color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.2em" }}> 
+             <span style={{ fontSize: 10, fontWeight: 700, color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.2em" }}> 
                Expediente de Investigación Abierta
              </span>
            </div>
            
-           <h1 style={{ fontSize: 42, fontWeight: 800, letterSpacing: "-0.04em", marginBottom: 24, lineHeight: 1.1 }}>
+           <h1 style={{ fontSize: isMobile ? 32 : 42, fontWeight: 800, letterSpacing: "-0.04em", marginBottom: 24, lineHeight: 1.1 }}>
              {practica.titulo}
            </h1>
            
-           <div style={{ display: "flex", flexWrap: "wrap", gap: 24, color: "var(--text-muted)", fontSize: 14 }}>
+           <div style={{ 
+             display: "flex", 
+             flexDirection: isMobile ? "column" : "row",
+             flexWrap: "wrap", 
+             gap: isMobile ? 16 : 24, 
+             color: "var(--text-muted)", 
+             fontSize: 14 
+           }}>
              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                <span style={{ color: "var(--accent)" }}>⌬</span>
                <strong>Dominio:</strong> {practica.materia}
@@ -110,6 +128,29 @@ export default function PublicPractica() {
                     <div style={{ fontSize: 13, color: "var(--text-muted)", fontFamily: "var(--font-mono)", lineHeight: 1.6, background: "#000", padding: 12, borderRadius: 10 }}>
                       {m.valores.join(", ")}
                     </div>
+                    {/* Interactive Chart */}
+                    <div style={{ width: "100%", height: 200, marginTop: 24 }}>
+                      <ResponsiveContainer>
+                        <LineChart data={m.valores.map((v, i) => ({ index: i + 1, valor: v }))}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" vertical={false} />
+                          <XAxis dataKey="index" hide />
+                          <YAxis hide domain={['auto', 'auto']} />
+                          <Tooltip
+                            contentStyle={{ background: "rgba(14, 14, 22, 0.95)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, fontSize: 12 }}
+                            itemStyle={{ color: "var(--accent)" }}
+                            cursor={{ stroke: "rgba(255,255,255,0.1)", strokeWidth: 1 }}
+                          />
+                          <Line 
+                            type="monotone" 
+                            dataKey="valor" 
+                            stroke="var(--accent)" 
+                            strokeWidth={2} 
+                            dot={{ r: 3, fill: "var(--accent)", strokeWidth: 0 }}
+                            activeDot={{ r: 5, strokeWidth: 0, fill: "#fff" }}
+                          />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -119,22 +160,22 @@ export default function PublicPractica() {
           <Section title="Síntesis Final" content={practica.conclusion} />
 
           {practica.archivos?.length > 0 && (
-            <div style={{ padding: 40, background: "rgba(255,255,255,0.02)", borderRadius: 32, border: "1px solid rgba(255,255,255,0.05)" }}>
-              <h2 style={{ fontSize: 13, fontWeight: 700, color: "var(--text-faint)", textTransform: "uppercase", letterSpacing: "0.2em", marginBottom: 32 }}>
+            <div style={{ padding: isMobile ? 24 : 40, background: "rgba(255,255,255,0.02)", borderRadius: 32, border: "1px solid rgba(255,255,255,0.05)" }}>
+              <h2 style={{ fontSize: 11, fontWeight: 700, color: "var(--text-faint)", textTransform: "uppercase", letterSpacing: "0.2em", marginBottom: 32 }}>
                 Bóveda de Evidencias y Documentación
               </h2>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 24 }}>
+              <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fill, minmax(240px, 1fr))", gap: 24 }}>
                 {practica.archivos.map((a) => (
                   <motion.div 
                     key={a.id} whileHover={{ y: -5 }}
                     style={{ position: "relative", borderRadius: 20, overflow: "hidden", background: "#000", border: "1px solid rgba(255,255,255,0.05)" }}
                   >
                     {a.tipo === "imagen" ? (
-                      <img src={a.url_cloudinary} alt={a.nombre} style={{ width: "100%", height: 180, objectFit: "cover", display: "block" }} />
+                      <img src={a.url_cloudinary} alt={a.nombre} style={{ width: "100%", height: isMobile ? 240 : 180, objectFit: "cover", display: "block" }} />
                     ) : a.tipo === "video" ? (
-                      <video src={a.url_cloudinary} style={{ width: "100%", height: 180, objectFit: "cover" }} muted loop onMouseEnter={e => e.target.play()} onMouseLeave={e => e.target.pause()} />
+                      <video src={a.url_cloudinary} style={{ width: "100%", height: isMobile ? 240 : 180, objectFit: "cover" }} controls={isMobile} muted={!isMobile} loop={!isMobile} onMouseEnter={e => !isMobile && e.target.play()} onMouseLeave={e => !isMobile && e.target.pause()} />
                     ) : (
-                      <div style={{ height: 180, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 40, background: "rgba(255,255,255,0.03)" }}>📄</div>
+                      <div style={{ height: isMobile ? 240 : 180, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 40, background: "rgba(255,255,255,0.03)" }}>📄</div>
                     )}
                     <div style={{ padding: 16, background: "linear-gradient(to top, #000 80%, transparent)", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
                       <p style={{ fontSize: 12, fontWeight: 700, margin: "0 0 4px 0", color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{a.nombre}</p>

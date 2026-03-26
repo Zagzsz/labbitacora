@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import api from "../api/axios";
+import useMobile from "../hooks/useMobile";
 
 const MATERIAS = ["Electrónica", "PLC", "Hidráulica", "Mecánica", "Programación", "Control", "Robótica", "Otro..."];
 const ETIQUETAS_SUGERIDAS = ["PLC", "Circuitos", "Bomba de agua", "Sensores", "Arduino", "Simulación", "Laboratorio", "Proyecto final"];
@@ -23,6 +24,7 @@ export default function PracticaNueva() {
   const [proyectos, setProyectos] = useState([]);
   const [plantillas, setPlantillas] = useState([]);
   const [selectedPlantilla, setSelectedPlantilla] = useState(null);
+  const isMobile = useMobile(1024);
   const [form, setForm] = useState({
     titulo: "", materia: "",
     fecha: new Date().toISOString().split("T")[0],
@@ -121,22 +123,22 @@ export default function PracticaNueva() {
       {/* Header */}
       <div style={{ 
         display: "flex", 
-        flexDirection: window.innerWidth < 768 ? "column" : "row",
+        flexDirection: isMobile ? "column" : "row",
         justifyContent: "space-between", 
-        alignItems: window.innerWidth < 768 ? "flex-start" : "flex-end", 
+        alignItems: isMobile ? "flex-start" : "flex-end", 
         marginBottom: 40,
         gap: 20
       }}>
         <div>
-          <p style={{ fontSize: 11, color: "var(--text-faint)", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 12 }}>
+          <p style={{ fontSize: 10, color: "var(--text-faint)", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 12 }}>
             SISTEMA DE REGISTRO CORE <span style={{ color: "#3a3a50" }}>/</span> NUEVO EXPEDIENTE
           </p>
-          <h1 style={{ fontSize: window.innerWidth < 768 ? 24 : 32, fontWeight: 700, letterSpacing: "-0.04em", color: "#fff", margin: 0 }}>
+          <h1 style={{ fontSize: isMobile ? 24 : 32, fontWeight: 700, letterSpacing: "-0.04em", color: "#fff", margin: 0 }}>
             Iniciar Investigación <span style={{ color: "var(--accent)" }}>Digital</span>
           </h1>
         </div>
         <div style={{
-          fontSize: 11, color: "var(--accent)", background: "var(--accent-glow)",
+          fontSize: 10, color: "var(--accent)", background: "var(--accent-glow)",
           border: "1px solid var(--accent-ring)", borderRadius: 12, padding: "6px 14px", fontWeight: 700,
           fontFamily: "var(--font-mono)", textTransform: "uppercase", letterSpacing: "0.05em"
         }}>
@@ -147,17 +149,17 @@ export default function PracticaNueva() {
       {/* Advanced Step Progress */}
       <div style={{ 
         display: "flex", 
-        flexDirection: window.innerWidth < 768 ? "column" : "row",
-        alignItems: window.innerWidth < 768 ? "flex-start" : "center", 
+        flexDirection: isMobile ? "column" : "row",
+        alignItems: isMobile ? "flex-start" : "center", 
         marginBottom: 48, 
         gap: 12 
       }}>
         {STEPS.map((label, i) => (
           <div key={label} style={{
             display: "flex", alignItems: "center", gap: 14,
-            flex: window.innerWidth < 768 ? "none" : 1, 
+            flex: isMobile ? "none" : 1, 
             position: "relative",
-            width: window.innerWidth < 768 ? "100%" : "auto"
+            width: isMobile ? "100%" : "auto"
           }}>
             <button 
               onClick={() => i < step && setStep(i)} 
@@ -203,7 +205,7 @@ export default function PracticaNueva() {
                 </span>
               </div>
             </button>
-            {i < STEPS.length - 1 && window.innerWidth >= 768 && (
+            {i < STEPS.length - 1 && !isMobile && (
               <div style={{ 
                 flex: 1, height: 2, 
                 background: i < step ? "var(--accent)" : "rgba(255,255,255,0.05)",
@@ -216,7 +218,7 @@ export default function PracticaNueva() {
       </div>
 
       {/* Unified Form Container */}
-      <div className="card" style={{ padding: window.innerWidth < 768 ? "24px" : "40px", marginBottom: 32 }}>
+      <div className="card" style={{ padding: isMobile ? "24px 16px" : "40px", marginBottom: 32 }}>
         <AnimatePresence mode="wait">
           <motion.div
             key={step}
@@ -227,7 +229,7 @@ export default function PracticaNueva() {
           >
             {/* STEP 0 — Identificación */}
             {step === 0 && (
-              <div style={{ display: "grid", gridTemplateColumns: window.innerWidth < 768 ? "1fr" : "1fr 1fr", gap: 32 }}>
+              <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 24 }}>
                 <Field label="TÍTULO DE INVESTIGACIÓN" required span={2} hint="Identificador único para este registro">
                   <input 
                     placeholder="ej. Sincronización de Motores Trifásicos con Control PID"
@@ -391,7 +393,7 @@ export default function PracticaNueva() {
                        </div>
                     </div>
                     
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+                    <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 24 }}>
                       {selectedPlantilla.campos_schema.map(f => (
                         <Field key={f.id} label={f.name} hint={f.type.toUpperCase()}>
                           {f.type === "text" && (
