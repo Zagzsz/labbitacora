@@ -38,6 +38,7 @@ export default function PracticaEditar() {
         conclusion: p.conclusion || "",
         proyecto_id: p.proyecto_id || "",
         is_public: p.is_public || false,
+        campos_dinamicos: p.campos_dinamicos || {},
       });
       setLoading(false);
     });
@@ -181,6 +182,22 @@ export default function PracticaEditar() {
             onChange={e => set("conclusion", e.target.value)}
             placeholder="¿Los resultados coincidieron con lo esperado?" />
         </Field>
+
+        {Object.keys(form.campos_dinamicos).length > 0 && (
+          <div style={{ marginTop: 10, padding: 20, background: "rgba(139, 92, 246, 0.03)", borderRadius: 16, border: "1px solid rgba(139, 92, 246, 0.1)" }}>
+            <p style={{ fontSize: 11, fontWeight: 700, color: "var(--accent)", textTransform: "uppercase", marginBottom: 16 }}>Protocolo de Datos</p>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+              {Object.entries(form.campos_dinamicos).map(([id, val]) => (
+                <Field key={id} label={`ID: ${id.substring(0, 8)}`}>
+                  <input 
+                    value={val} 
+                    onChange={e => set("campos_dinamicos", { ...form.campos_dinamicos, [id]: e.target.value })} 
+                  />
+                </Field>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Footer */}

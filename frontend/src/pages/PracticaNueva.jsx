@@ -19,6 +19,8 @@ export default function PracticaNueva() {
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
   const [proyectos, setProyectos] = useState([]);
+  const [plantillas, setPlantillas] = useState([]);
+  const [selectedPlantilla, setSelectedPlantilla] = useState(null);
   const [form, setForm] = useState({
     titulo: "", materia: "",
     fecha: new Date().toISOString().split("T")[0],
@@ -26,10 +28,18 @@ export default function PracticaNueva() {
     mediciones: [],
     proyecto_id: new URLSearchParams(window.location.search).get("proyecto_id") || "",
     is_public: false,
+    plantilla_id: "",
+    campos_dinamicos: {}
   });
 
   useEffect(() => {
-    api.get("/proyectos").then(res => setProyectos(res.data)).catch(console.error);
+    Promise.all([
+      api.get("/proyectos"),
+      api.get("/plantillas")
+    ]).then(([projRes, plantRes]) => {
+      setProyectos(projRes.data);
+      setPlantillas(plantRes.data);
+    }).catch(console.error);
   }, []);
   const [medTemp, setMedTemp] = useState({ nombre: "", unidad: "", valores: "" });
 
@@ -61,7 +71,8 @@ export default function PracticaNueva() {
         descripcion: form.descripcion,
         conclusion: form.conclusion,
         proyecto_id: form.proyecto_id || null,
-        is_public: form.is_public
+        is_public: form.is_public,
+        campos_dinamicos: form.campos_dinamicos
       });
       const practicaId = res.data.id;
 
@@ -217,6 +228,22 @@ export default function PracticaNueva() {
                     {proyectos.map(p => <option key={p.id} value={p.id}>{p.nombre}</option>)}
                   </select>
                 </Field>
+                <Field label="PROTOCOLOS DE INVESTIGACIÓN (PLANTILLA)" hint="Carga campos personalizados automáticamente">
+                  <select 
+                    value={form.plantilla_id} 
+                    onChange={e => {
+                      const pid = e.target.value;
+                      const p = plantillas.find(x => x.id === pid);
+                      set("plantilla_id", pid);
+                      setSelectedPlantilla(p);
+                      // Reset dynamic fields when template changes
+                      set("campos_dinamicos", {});
+                    }}
+                  >
+                    <option value="">Investigación Libre (Sin plantilla)</option>
+                    {plantillas.map(p => <option key={p.id} value={p.id}>{p.nombre}</option>)}
+                  </select>
+                </Field>
                 <Field label="VISIBILIDAD DEL EXPEDIENTE">
                   <div 
                     onClick={() => set("is_public", !form.is_public)}
@@ -307,6 +334,47 @@ export default function PracticaNueva() {
                     placeholder="Resume los hallazgos preliminares o conclusiones finales..."
                     value={form.conclusion} onChange={e => set("conclusion", e.target.value)} />
                 </Field>
+
+                {selectedPlantilla && selectedPlantilla.schema_json && selectedPlantilla.schema_json.length > 0 && (
+                  <div style={{ marginTop: 24, padding: 32, background: "rgba(139, 92, 246, 0.03)", borderRadius: 24, border: "1px solid rgba(139, 92, 246, 0.1)" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
+                       <span style={{ fontSize: 20 }}>📋</span>
+                       <div>
+                         <h3 style={{ fontSize: 16, fontWeight: 700, color: "#fff", margin: 0 }}>Protocolo: {selectedPlantilla.nombre}</h3>
+                         <p style={{ fontSize: 12, color: "var(--text-muted)", margin: 0 }}>Campos adicionales requeridos por esta plantilla</p>
+                       </div>
+                    </div>
+                    
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+                      {selectedPlantilla.schema_json.map(f => (
+                        <Field key={f.id} label={f.name} hint={f.type.toUpperCase()}>
+                          {f.type === "text" && (
+                            <input 
+                              placeholder={`Ingresar ${f.name.toLowerCase()}`}
+                              value={form.campos_dinamicos[f.id] || ""} 
+                              onChange={e => set("campos_dinamicos", { ...form.campos_dinamicos, [f.id]: e.target.value })} 
+                            />
+                          )}
+                          {f.type === "number" && (
+                            <input 
+                              type="number"
+                              placeholder="0.00"
+                              value={form.campos_dinamicos[f.id] || ""} 
+                              onChange={e => set("campos_dinamicos", { ...form.campos_dinamicos, [f.id]: e.target.value })} 
+                            />
+                          )}
+                          {f.type === "date" && (
+                            <input 
+                              type="date"
+                              value={form.campos_dinamicos[f.id] || ""} 
+                              onChange={e => set("campos_dinamicos", { ...form.campos_dinamicos, [f.id]: e.target.value })} 
+                            />
+                          )}
+                        </Field>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 

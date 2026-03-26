@@ -211,6 +211,21 @@ export default function PracticaDetalle() {
             </Section>
           )}
 
+          {p.campos_dinamicos && Object.keys(p.campos_dinamicos).length > 0 && (
+            <Section title="Protocolo de Datos Personalizado">
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+                {Object.entries(p.campos_dinamicos).map(([id, val]) => (
+                  <div key={id} className="card" style={{ padding: "16px 20px", display: "flex", flexDirection: "column", gap: 6, background: "rgba(139, 92, 246, 0.03)", border: "1px solid rgba(139, 92, 246, 0.1)" }}>
+                    <span style={{ fontSize: 10, fontWeight: 700, color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                      Campo ID: {id.substring(0, 8)}
+                    </span>
+                    <span style={{ fontSize: 15, fontWeight: 600, color: "#fff" }}>{val || "—"}</span>
+                  </div>
+                ))}
+              </div>
+            </Section>
+          )}
+
           {/* Mediciones with Neon Charts */}
           <Section title="Análisis de Datos (Telemetría)">
             {(p.mediciones || []).length === 0 ? (
