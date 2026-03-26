@@ -34,6 +34,16 @@ export default function AdminUsers() {
     }
   };
 
+  const handleActivate = async (userId) => {
+    if (!window.confirm("¿Deseas activar manualmente a este usuario?")) return;
+    try {
+      await api.patch(`/auth/users/${userId}/activate`);
+      fetchUsers(); // Refresh list
+    } catch (err) {
+      alert(err.response?.data?.detail || "Error al activar usuario");
+    }
+  };
+
   if (loading) return <div className="text-center py-20 text-[var(--text-muted)]">Cargando usuarios...</div>;
 
   return (
@@ -53,11 +63,11 @@ export default function AdminUsers() {
         </div>
       )}
 
-      <div className="bg-[var(--bg-surface)] rounded-2xl border border-[var(--border)] overflow-hidden shadow-sm">
+      <div className="bg-[var(--bg-surface)] rounded-2xl border border-[var(--border)] shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table className="w-full text-left border-collapse min-w-[800px]">
             <thead>
-              <tr className="border-bottom border-[var(--border)] bg-[var(--bg-elevated)]/30">
+              <tr className="border-b border-[var(--border)] bg-[var(--bg-elevated)]/30">
                 <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-[var(--text-faint)]">Usuario</th>
                 <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-[var(--text-faint)]">Email</th>
                 <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-[var(--text-faint)]">Estado</th>
@@ -92,14 +102,24 @@ export default function AdminUsers() {
                     </span>
                   </td>
                   <td className="px-6 py-4 text-right">
-                    {u.id !== currentUser?.id && u.is_active && (
-                      <button 
-                        onClick={() => handleDeactivate(u.id)}
-                        className="text-[11px] font-bold text-red-400 hover:text-red-300 transition-colors uppercase"
-                      >
-                        Desactivar
-                      </button>
-                    )}
+                    <div className="flex justify-end gap-3">
+                      {!u.is_active && (
+                        <button 
+                          onClick={() => handleActivate(u.id)}
+                          className="text-[11px] font-bold text-green-400 hover:text-green-300 transition-colors uppercase"
+                        >
+                          Activar
+                        </button>
+                      )}
+                      {u.id !== currentUser?.id && u.is_active && (
+                        <button 
+                          onClick={() => handleDeactivate(u.id)}
+                          className="text-[11px] font-bold text-red-400 hover:text-red-300 transition-colors uppercase"
+                        >
+                          Desactivar
+                        </button>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}

@@ -65,41 +65,44 @@ def login(data: LoginRequest, request: Request, db: Session = Depends(get_db)):
 @router.post("/register", status_code=status.HTTP_201_CREATED)
 @limiter.limit("5/hour")
 def register(data: RegisterRequest, request: Request, db: Session = Depends(get_db)):
-    # Check if username exists
-    if db.query(Usuario).filter(Usuario.username == data.username).first():
-        raise HTTPException(status_code=409, detail="El nombre de usuario ya existe")
+    # Check if user exists (either by username or email)
+    user = db.query(Usuario).filter(
+        (Usuario.username == data.username) | (Usuario.email == data.email)
+    ).first()
     
-    # Check if email exists
-    if db.query(Usuario).filter(Usuario.email == data.email).first():
-        raise HTTPException(status_code=409, detail="El correo ya está registrado")
+    if user:
+        if user.is_active:
+            detail = "El nombre de usuario ya existe" if user.username == data.username else "El correo ya está registrado"
+            raise HTTPException(status_code=409, detail=detail)
+        
+        # If user is inactive, they might be retrying because email failed or they didn't verify.
+        # We update their info (in case they changed something) and re-send the code.
+        print(f"🔄 Retrying registration for inactive user: {data.email}")
+        user.username = data.username
+        user.email = data.email
+        user.hashed_password = hash_password(data.password)
+    else:
+        print(f"🆕 Creating new user for registration: {data.email}")
+        user = Usuario(
+            username=data.username,
+            email=data.email,
+            hashed_password=hash_password(data.password),
+            is_active=False,
+            is_admin=False
+        )
+        db.add(user)
     
-    # Generate verification code
+    db.flush() # Ensure user has an ID
+    
+    # Generate/Update verification code
     code = f"{random.randint(100000, 999999)}"
     expires_at = datetime.now(timezone.utc) + timedelta(minutes=15)
-    
-    # Store registration data temporarily (can be simplified by directly creating a disabled user or storing in cache/session)
-    # For now, we will use the verification_codes table to store everything needed to complete registration
-    # Or better: store the password hash here or just let the user re-enter it? 
-    # Let's create a "pending" verification code.
     
     # Clean old codes for this email
     db.query(VerificationCode).filter(
         VerificationCode.email == data.email, 
         VerificationCode.purpose == "register"
     ).update({"used": True})
-    
-    # Store encrypted password in the 'verification_codes' table metadata or similar? 
-    # Actually, let's just create the user as is_active=False and activate upon verification.
-    
-    user = Usuario(
-        username=data.username,
-        email=data.email,
-        hashed_password=hash_password(data.password),
-        is_active=False, # Wait for verification
-        is_admin=False
-    )
-    db.add(user)
-    db.flush() # Get user ID
     
     v_code = VerificationCode(
         email=data.email,
@@ -108,12 +111,17 @@ def register(data: RegisterRequest, request: Request, db: Session = Depends(get_
         expires_at=expires_at
     )
     db.add(v_code)
-    db.commit()
     
-    # Send email
+    # Try sending email BEFORE final commit
     if not send_verification_code(data.email, code, "register"):
-        raise HTTPException(status_code=500, detail="Error al enviar el correo de verificación")
+        db.rollback() # Don't leave an inactive user if we couldn't even send the code the first time
+        # (Though if they are already in DB from a previous attempt, rollback won't remove them, but it's okay)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
+            detail="Error al enviar el correo de verificación. Verifica tu email o intenta más tarde."
+        )
         
+    db.commit()
     return {"message": "Código de verificación enviado"}
 
 
@@ -237,6 +245,22 @@ def deactivate_user(
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
     
     user.is_active = False
+    db.commit()
+    db.refresh(user)
+    return user
+
+
+@router.patch("/users/{user_id}/activate", response_model=UserResponse)
+def activate_user(
+    user_id: uuid.UUID,
+    db: Session = Depends(get_db),
+    admin_user: Usuario = Depends(get_current_admin_user)
+):
+    user = db.query(Usuario).filter(Usuario.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    
+    user.is_active = True
     db.commit()
     db.refresh(user)
     return user
