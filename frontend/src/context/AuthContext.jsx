@@ -29,6 +29,21 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
+  const login = async (username, password) => {
+    const params = new URLSearchParams();
+    params.append("username", username);
+    params.append("password", password);
+    const res = await api.post("/auth/login", params);
+    localStorage.setItem("token", res.data.access_token);
+    setUser(res.data.user);
+    return res.data;
+  };
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    setUser(null);
+  };
+
   const register = async (username, email, password) => {
     return await api.post("/auth/register", { username, email, password });
   };
