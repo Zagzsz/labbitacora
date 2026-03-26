@@ -117,6 +117,34 @@ export default function PublicPractica() {
           )}
 
           <Section title="Síntesis Final" content={practica.conclusion} />
+
+          {practica.archivos?.length > 0 && (
+            <div style={{ padding: 40, background: "rgba(255,255,255,0.02)", borderRadius: 32, border: "1px solid rgba(255,255,255,0.05)" }}>
+              <h2 style={{ fontSize: 13, fontWeight: 700, color: "var(--text-faint)", textTransform: "uppercase", letterSpacing: "0.2em", marginBottom: 32 }}>
+                Bóveda de Evidencias y Documentación
+              </h2>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 24 }}>
+                {practica.archivos.map((a) => (
+                  <motion.div 
+                    key={a.id} whileHover={{ y: -5 }}
+                    style={{ position: "relative", borderRadius: 20, overflow: "hidden", background: "#000", border: "1px solid rgba(255,255,255,0.05)" }}
+                  >
+                    {a.tipo === "imagen" ? (
+                      <img src={a.url_cloudinary} alt={a.nombre} style={{ width: "100%", height: 180, objectFit: "cover", display: "block" }} />
+                    ) : a.tipo === "video" ? (
+                      <video src={a.url_cloudinary} style={{ width: "100%", height: 180, objectFit: "cover" }} muted loop onMouseEnter={e => e.target.play()} onMouseLeave={e => e.target.pause()} />
+                    ) : (
+                      <div style={{ height: 180, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 40, background: "rgba(255,255,255,0.03)" }}>📄</div>
+                    )}
+                    <div style={{ padding: 16, background: "linear-gradient(to top, #000 80%, transparent)", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                      <p style={{ fontSize: 12, fontWeight: 700, margin: "0 0 4px 0", color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{a.nombre}</p>
+                      <a href={a.url_cloudinary} target="_blank" rel="noopener noreferrer" style={{ fontSize: 10, color: "var(--accent)", textDecoration: "none", fontWeight: 800, textTransform: "uppercase" }}>Ver Documento ↗</a>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          )}
         </main>
 
         {/* Footer info */}
