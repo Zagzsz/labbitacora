@@ -20,7 +20,7 @@ class Usuario(Base):
     is_admin: Mapped[bool] = mapped_column(default=False)
     is_active: Mapped[bool] = mapped_column(default=True)
     
-    # Profile information
+    # Información del perfil
     universidad: Mapped[str | None] = mapped_column(String, nullable=True)
     carrera: Mapped[str | None] = mapped_column(String, nullable=True)
     semestre: Mapped[str | None] = mapped_column(String, nullable=True)

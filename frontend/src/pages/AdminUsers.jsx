@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 
 export default function AdminUsers() {
   const [users, setUsers] = useState([]);
+  const [step, setStep] = useState(1); // 1: Datos, 2: Verificación (obsoleto pero mantenido por estructura)
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const { user: currentUser } = useAuth();
@@ -28,7 +29,7 @@ export default function AdminUsers() {
     if (!window.confirm("¿Estás seguro de desactivar a este usuario? No podrá iniciar sesión.")) return;
     try {
       await api.patch(`/auth/users/${userId}/deactivate`);
-      fetchUsers(); // Refresh list
+      fetchUsers(); // Actualizar lista
     } catch (err) {
       alert(err.response?.data?.detail || "Error al desactivar usuario");
     }
@@ -38,7 +39,7 @@ export default function AdminUsers() {
     if (!window.confirm("¿Deseas activar manualmente a este usuario?")) return;
     try {
       await api.patch(`/auth/users/${userId}/activate`);
-      fetchUsers(); // Refresh list
+      fetchUsers(); // Actualizar lista
     } catch (err) {
       alert(err.response?.data?.detail || "Error al activar usuario");
     }

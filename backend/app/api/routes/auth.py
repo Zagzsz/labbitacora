@@ -65,26 +65,26 @@ def login(data: LoginRequest, request: Request, db: Session = Depends(get_db)):
 @router.post("/register", status_code=status.HTTP_201_CREATED, response_model=UserResponse)
 @limiter.limit("10/hour")
 def register(data: RegisterRequest, request: Request, db: Session = Depends(get_db)):
-    # Check if username exists
+    # Verificar si el usuario ya existe
     user = db.query(Usuario).filter(Usuario.username == data.username).first()
     
     if user:
         if user.is_active:
             raise HTTPException(status_code=409, detail="El nombre de usuario ya está en uso")
         
-        # Inactive user retry: update password and reactivate directly
-        print(f"🔄 Reactivating inactive user from registration: {data.username}")
+        # Reintento de usuario inactivo: actualizar contraseña y reactivar directamente
+        print(f"🔄 Reactivando usuario inactivo desde registro: {data.username}")
         user.hashed_password = hash_password(data.password)
         user.is_active = True
         db.commit()
         db.refresh(user)
         return user
 
-    # Create new active user
-    print(f"🆕 Creating new active user: {data.username}")
+    # Crear nuevo usuario activo
+    print(f"🆕 Creando nuevo usuario activo: {data.username}")
     new_user = Usuario(
         username=data.username,
-        email=data.email, # Optional
+        email=data.email, # Opcional
         hashed_password=hash_password(data.password),
         is_active=True,
         is_admin=False
@@ -98,7 +98,6 @@ def register(data: RegisterRequest, request: Request, db: Session = Depends(get_
 @router.patch("/users/{user_id}/reset-password", response_model=UserResponse)
 def admin_reset_password(
     user_id: uuid.UUID,
-    data: dict, 
     db: Session = Depends(get_db),
     admin_user: Usuario = Depends(get_current_admin_user)
 ):
@@ -147,17 +146,17 @@ def verify_email(data: VerifyCodeRequest, db: Session = Depends(get_db)):
 def forgot_password(data: ForgotPasswordRequest, request: Request, db: Session = Depends(get_db)):
     user = db.query(Usuario).filter(Usuario.email == data.email).first()
     if not user:
-        # Don't reveal if email exists, but we can say "if exists, email sent"
+        # No revelamos si el correo existe, respondemos de forma genérica
         return {"message": "Si el correo está registrado, se ha enviado un código"}
-    
+
     code = f"{random.randint(100000, 999999)}"
     expires_at = datetime.now(timezone.utc) + timedelta(minutes=15)
-    
+    # Invalidar códigos anteriores
     db.query(VerificationCode).filter(
-        VerificationCode.email == data.email, 
+        VerificationCode.email == data.email,
         VerificationCode.purpose == "reset_password"
     ).update({"used": True})
-    
+
     v_code = VerificationCode(
         email=data.email,
         code=code,
@@ -213,7 +212,7 @@ def update_me(
     return current_user
 
 
-# Admin routes
+# Rutas de Administrador
 @router.get("/users", response_model=list[UserResponse])
 def list_users(
     db: Session = Depends(get_db),
