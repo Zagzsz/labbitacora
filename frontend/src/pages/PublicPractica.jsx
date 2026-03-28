@@ -99,6 +99,10 @@ export default function PublicPractica() {
                <strong>Dominio:</strong> {practica.materia}
              </div>
              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+               <span style={{ color: "var(--accent)" }}>👤</span>
+               <strong>Investigador:</strong> {practica.usuario_creador || "Investigador independiente"}
+             </div>
+             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                <span style={{ color: "var(--text-faint)" }}>📅</span>
                {new Date(practica.fecha).toLocaleDateString("es-MX", { day: 'numeric', month: 'long', year: 'numeric' })}
              </div>

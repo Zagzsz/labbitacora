@@ -68,6 +68,7 @@ class PracticaResponse(BaseModel):
     updated_at: datetime
     archivos: list[ArchivoResponse] = []
     mediciones: list[MedicionResponse] = []
+    usuario_creador: Optional[str] = None
 
     model_config = {"from_attributes": True}
 
@@ -83,5 +84,6 @@ class PracticaListItem(BaseModel):
     campos_dinamicos: dict = {}
     created_at: datetime
     updated_at: datetime
+    usuario_creador: Optional[str] = None
 
     model_config = {"from_attributes": True}
