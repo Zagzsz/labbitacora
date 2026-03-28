@@ -82,7 +82,7 @@ export default function Hero() {
               <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-green-500"></div>
             </div>
             <div className="ml-4 px-3 py-1 rounded-md bg-[#040405] border border-[#222228] text-[10px] sm:text-xs text-[#8a8aa3] font-mono flex items-center gap-2 truncate max-w-[150px] sm:max-w-xs">
-              <span className="text-[#a855f7]">🔒</span> app.labbitacora.com
+              <span className="text-[#a855f7]">🔒</span> www.labbitacora.app
             </div>
           </div>
           {/* Dashboard Body Structure */}

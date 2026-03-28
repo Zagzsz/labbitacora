@@ -41,7 +41,7 @@ export default function Landing() {
 
   // Si no está logueado y ya se validó que no lo está, mostrar la Landing:
   return (
-    <div className="min-h-screen bg-[#040405] text-[#e8e6f0] font-sans overflow-x-hidden">
+    <div className="w-full min-h-screen bg-[#040405] text-[#e8e6f0] font-sans overflow-x-hidden">
       <Navbar />
       <Hero />
       <Features />
