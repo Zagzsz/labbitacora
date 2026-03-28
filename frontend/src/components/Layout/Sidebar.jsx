@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { motion } from "framer-motion";
 
@@ -33,13 +33,21 @@ export default function Sidebar() {
       display: "flex", flexDirection: "column", padding: "24px 16px", flexShrink: 0,
       backdropFilter: "blur(10px)", overflowY: "auto"
     }}>
-      {/* Logo */}
-      <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "0 12px", marginBottom: 36 }}>
+      {/* Logo — links to landing page */}
+      <Link
+        to="/landing"
+        title="Ver página de inicio"
+        style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 12, padding: "0 12px", marginBottom: 36, cursor: "pointer" }}
+      >
         <div style={{
           width: 32, height: 32, background: "var(--bg-elevated)", borderRadius: 10,
           display: "flex", alignItems: "center", justifyContent: "center",
           boxShadow: "0 0 15px var(--accent-glow)",
-        }}>
+          transition: "box-shadow 0.2s",
+        }}
+          onMouseEnter={e => e.currentTarget.style.boxShadow = "0 0 24px var(--accent-glow), 0 0 8px var(--accent)"}
+          onMouseLeave={e => e.currentTarget.style.boxShadow = "0 0 15px var(--accent-glow)"}
+        >
           <svg width="18" height="18" viewBox="0 0 14 14" fill="none">
             <rect width="6" height="6" rx="2" fill="var(--accent)"/>
             <rect x="8" width="6" height="6" rx="2" fill="var(--accent)" opacity="0.4"/>
@@ -50,7 +58,7 @@ export default function Sidebar() {
         <span style={{ fontSize: 16, fontWeight: 700, color: "#fff", letterSpacing: "-0.03em" }}>
           LabBitácora
         </span>
-      </div>
+      </Link>
 
       {/* Nav sections */}
       {NAV.filter(s => !s.adminOnly || user?.is_admin).map((section) => (

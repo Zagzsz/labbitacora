@@ -45,6 +45,7 @@ function AppRoutes() {
         <Route path="/register" element={user ? <Navigate to="/dashboard" replace /> : <Register />} />
         <Route path="/forgot-password" element={user ? <Navigate to="/dashboard" replace /> : <ForgotPassword />} />
         <Route path="/public/:id" element={<PublicPractica />} />
+        <Route path="/landing" element={<Landing />} />
         <Route path="/" element={user ? <Navigate to="/dashboard" replace /> : <Landing />} />
         <Route
           element={

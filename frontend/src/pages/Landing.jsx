@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./landing.css";
 import Navbar from "../components/Landing/Navbar";
 import Hero from "../components/Landing/Hero";
@@ -12,17 +12,20 @@ import Footer from "../components/Landing/Footer";
 export default function Landing() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // Si ya hay sesión iniciada, redirigir al dashboard como pidió el usuario.
+  // Solo redirigir al dashboard si viene desde "/" (raíz) y ya tiene sesión.
+  // Si viene desde "/landing" (clic en el logo del sidebar), mostrar la landing normalmente.
+  const isRootPath = location.pathname === "/";
+
   useEffect(() => {
-    if (!loading && user) {
+    if (!loading && user && isRootPath) {
       navigate("/dashboard", { replace: true });
     }
-  }, [user, loading, navigate]);
+  }, [user, loading, navigate, isRootPath]);
 
-  // Mostrar un pequeño indicador de carga si está validando,
-  // y también evitar renderizar la landing si va a redirigirlo (para evitar destello)
-  if (loading || user) {
+  // Mostrar cargando solo si está validando en la ruta raíz (evitar destello)
+  if (loading || (user && isRootPath)) {
     return (
       <div
         style={{
@@ -40,7 +43,6 @@ export default function Landing() {
     );
   }
 
-  // Si no está logueado y ya se validó que no lo está, mostrar la Landing:
   return (
     <div className="landing-wrapper">
       <Navbar />
