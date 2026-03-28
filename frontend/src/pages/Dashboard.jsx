@@ -172,13 +172,14 @@ export default function Dashboard() {
                 🔬
               </div>
               <div>
-                <h2 style={{ fontSize: 18, fontWeight: 700, margin: 0 }}>{user?.username || "Investigador"}</h2>
+                <h2 style={{ fontSize: 18, fontWeight: 700, margin: 0 }}>{user?.full_name || user?.username || "Investigador"}</h2>
                 <p style={{ fontSize: 12, color: "var(--text-muted)", margin: 0 }}>Titular de Laboratorio</p>
               </div>
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               {[
+                { label: "Nombre Real", field: "full_name", icon: "👤" },
                 { label: "Universidad", field: "universidad", icon: "🏛️" },
                 { label: "Carrera", field: "carrera", icon: "🎓" },
                 { label: "Semestre", field: "semestre", icon: "📑" }

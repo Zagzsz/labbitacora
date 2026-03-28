@@ -23,6 +23,7 @@ class UserResponse(BaseModel):
     username: str
     is_admin: bool
     is_active: bool
+    full_name: Optional[str] = None
     universidad: Optional[str] = None
     carrera: Optional[str] = None
     semestre: Optional[str] = None
@@ -31,6 +32,7 @@ class UserResponse(BaseModel):
 
 
 class UserUpdate(BaseModel):
+    full_name: Optional[str] = None
     universidad: Optional[str] = None
     carrera: Optional[str] = None
     semestre: Optional[str] = None

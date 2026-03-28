@@ -41,7 +41,7 @@ def list_practicas(
             proyecto_id=p.proyecto_id,
             created_at=p.created_at,
             updated_at=p.updated_at,
-            usuario_creador=p.usuario.username,
+            usuario_creador=p.usuario.full_name or p.usuario.username,
         )
         for p in practicas
     ]
@@ -159,7 +159,7 @@ def _to_response(p: Practica) -> PracticaResponse:
         campos_dinamicos=p.campos_dinamicos or {},
         created_at=p.created_at,
         updated_at=p.updated_at,
-        usuario_creador=p.usuario.username,
+        usuario_creador=p.usuario.full_name or p.usuario.username,
         archivos=[
             ArchivoResponse(
                 id=a.id, 

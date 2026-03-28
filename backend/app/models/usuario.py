@@ -18,6 +18,7 @@ class Usuario(Base):
     hashed_password: Mapped[str] = mapped_column(String, nullable=False)
     is_admin: Mapped[bool] = mapped_column(default=False)
     is_active: Mapped[bool] = mapped_column(default=True)
+    full_name: Mapped[str | None] = mapped_column(String, nullable=True)
     
     # Información del perfil
     universidad: Mapped[str | None] = mapped_column(String, nullable=True)
