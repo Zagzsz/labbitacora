@@ -235,15 +235,7 @@ export default function Hero() {
                 ))}
               </div>
 
-              {/* Section: ADMINISTRACIÓN */}
-              <div style={{ padding: "0 0.75rem" }}>
-                <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.45rem", color: "var(--muted)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "0.4rem" }}>
-                  Admin
-                </div>
-                <div style={{ padding: "0.3rem 0.4rem", borderRadius: 4, fontSize: "0.58rem", fontFamily: "'Instrument Sans', sans-serif", color: "var(--muted)" }}>
-                  Usuarios
-                </div>
-              </div>
+
             </div>
 
             {/* Main content */}

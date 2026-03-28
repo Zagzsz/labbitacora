@@ -70,3 +70,9 @@ landing-plan.md
 backend/debug_*.py
 backend/test_api.py
 backend/reset_admin.py
+
+# Temporary scripts & reference downloads
+process_landing.js
+labbitacora-landing/
+labbitacora-landing.zip
+frontend/build_err.txt
