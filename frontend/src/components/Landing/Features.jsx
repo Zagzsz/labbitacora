@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 
 export default function Features() {
   return (
-    <section id="features" className="py-24 sm:py-32 bg-[#040405] relative overflow-hidden text-white">
+    <section id="features" className="py-24 sm:py-32 bg-[#040405] relative overflow-hidden text-white w-full">
       {/* Background Ambience */}
       <div className="absolute top-0 right-0 w-full max-w-[800px] h-[800px] bg-[#a855f7]/10 blur-[150px] rounded-full pointer-events-none mix-blend-screen opacity-50 z-0"></div>
       <div className="absolute bottom-0 left-0 w-full max-w-[600px] h-[600px] bg-blue-600/10 blur-[120px] rounded-full pointer-events-none mix-blend-screen opacity-50 z-0"></div>

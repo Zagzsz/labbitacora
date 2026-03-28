@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 export default function CTA() {
   return (
-    <section className="py-24 sm:py-32 md:py-40 bg-[#040405] relative overflow-hidden">
+    <section className="py-24 sm:py-32 md:py-40 bg-[#040405] relative overflow-hidden w-full">
       <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0c] via-transparent to-transparent z-0"></div>
       
       {/* Decorative gradient sphere */}

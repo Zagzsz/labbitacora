@@ -25,7 +25,7 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section className="py-24 sm:py-32 bg-[#040405] overflow-hidden relative">
+    <section className="py-24 sm:py-32 bg-[#040405] overflow-hidden relative w-full">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#0a0a0c]/80 z-0"></div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
         <div className="flex flex-col lg:flex-row gap-12 sm:gap-16 lg:gap-20 items-center justify-between">
