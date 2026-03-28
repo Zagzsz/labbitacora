@@ -37,6 +37,8 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 # CORS
 origins = [
     settings.FRONTEND_URL,
+    "https://www.labbitacora.app",
+    "https://labbitacora.app",
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "http://192.168.100.34:5173",  # Para acceso desde la red local
