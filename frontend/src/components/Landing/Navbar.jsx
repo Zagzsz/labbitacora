@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const { user } = useAuth();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -35,7 +37,7 @@ export default function Navbar() {
             borderRadius: "50%",
             background: "var(--accent)",
             display: "inline-block",
-            animation: "pulse 2s ease-in-out infinite",
+            animation: "pulse-dot 2s ease-in-out infinite",
           }}
         />
         <span
@@ -50,14 +52,28 @@ export default function Navbar() {
         </span>
       </div>
 
-      {/* Actions */}
+      {/* Actions — contextual según estado de sesión */}
       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-        <Link to="/login" className="btn-ghost">
-          Iniciar sesión
-        </Link>
-        <Link to="/register" className="btn-primary">
-          Registrarse →
-        </Link>
+        {user ? (
+          /* Usuario con sesión — botón para volver al dashboard */
+          <Link
+            to="/dashboard"
+            className="btn-primary"
+            style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}
+          >
+            ← Ir al Dashboard
+          </Link>
+        ) : (
+          /* Sin sesión — opciones de login/registro */
+          <>
+            <Link to="/login" className="btn-ghost">
+              Iniciar sesión
+            </Link>
+            <Link to="/register" className="btn-primary">
+              Comenzar gratis →
+            </Link>
+          </>
+        )}
       </div>
     </nav>
   );
