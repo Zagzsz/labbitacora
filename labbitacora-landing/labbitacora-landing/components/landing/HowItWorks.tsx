@@ -202,6 +202,12 @@ function Line({
   keyColor,
   keyText,
   children,
+}: {
+  prompt?: string;
+  color?: string;
+  keyColor?: string;
+  keyText?: string;
+  children: React.ReactNode;
 }) {
   return (
     <div>

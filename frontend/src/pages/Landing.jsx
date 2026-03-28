@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import "./landing.css";
 import Navbar from "../components/Landing/Navbar";
 import Hero from "../components/Landing/Hero";
 import Features from "../components/Landing/Features";
@@ -41,7 +42,7 @@ export default function Landing() {
 
   // Si no está logueado y ya se validó que no lo está, mostrar la Landing:
   return (
-    <div className="w-full min-h-screen bg-[#040405] text-[#e8e6f0] font-sans overflow-x-hidden">
+    <div className="landing-wrapper">
       <Navbar />
       <Hero />
       <Features />

@@ -87,7 +87,7 @@ export default function Features() {
   );
 }
 
-function FeatureCell({ icon, name, desc }) {
+function FeatureCell({ icon, name, desc }: { icon: string; name: string; desc: string }) {
   return (
     <div
       style={{
@@ -95,8 +95,8 @@ function FeatureCell({ icon, name, desc }) {
         padding: "2rem",
         transition: "background 0.2s",
       }}
-      onMouseEnter={e => ((e.currentTarget).style.background = "var(--surface-2)")}
-      onMouseLeave={e => ((e.currentTarget).style.background = "var(--surface)")}
+      onMouseEnter={e => ((e.currentTarget as HTMLDivElement).style.background = "var(--surface-2)")}
+      onMouseLeave={e => ((e.currentTarget as HTMLDivElement).style.background = "var(--surface)")}
     >
       <div
         style={{

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 export default function CTA() {
   return (
@@ -64,7 +64,7 @@ export default function CTA() {
             }}
           >
             <Link
-              to="/register"
+              href="/register"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -81,20 +81,20 @@ export default function CTA() {
                 transition: "background 0.2s, transform 0.15s, box-shadow 0.2s",
               }}
               onMouseEnter={e => {
-                (e.currentTarget).style.background = "var(--accent-dim)";
-                (e.currentTarget).style.transform = "translateY(-2px)";
-                (e.currentTarget).style.boxShadow = "0 8px 28px var(--accent-glow-strong)";
+                (e.currentTarget as HTMLAnchorElement).style.background = "var(--accent-dim)";
+                (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(-2px)";
+                (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 8px 28px var(--accent-glow-strong)";
               }}
               onMouseLeave={e => {
-                (e.currentTarget).style.background = "var(--accent)";
-                (e.currentTarget).style.transform = "translateY(0)";
-                (e.currentTarget).style.boxShadow = "none";
+                (e.currentTarget as HTMLAnchorElement).style.background = "var(--accent)";
+                (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(0)";
+                (e.currentTarget as HTMLAnchorElement).style.boxShadow = "none";
               }}
             >
               Crear cuenta gratis →
             </Link>
             <Link
-              to="/login"
+              href="/login"
               className="btn-ghost"
               style={{ padding: "0.875rem 1.75rem", fontSize: "0.95rem" }}
             >

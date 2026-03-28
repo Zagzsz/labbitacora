@@ -1,5 +1,6 @@
+"use client";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -52,10 +53,10 @@ export default function Navbar() {
 
       {/* Actions */}
       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-        <Link to="/login" className="btn-ghost">
+        <Link href="/login" className="btn-ghost">
           Iniciar sesión
         </Link>
-        <Link to="/register" className="btn-primary">
+        <Link href="/register" className="btn-primary">
           Registrarse →
         </Link>
       </div>

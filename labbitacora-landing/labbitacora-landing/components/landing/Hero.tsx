@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+"use client";
+import Link from "next/link";
 
 const BAR_HEIGHTS = [30, 55, 45, 80, 60, 90, 70, 85, 65, 100];
 
@@ -73,7 +74,7 @@ export default function Hero() {
 
         <div className="fade-up delay-3" style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
           <Link
-            to="/register"
+            href="/register"
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -91,14 +92,14 @@ export default function Hero() {
               transition: "background 0.2s, transform 0.15s, box-shadow 0.2s",
             }}
             onMouseEnter={e => {
-              (e.currentTarget).style.background = "var(--accent-dim)";
-              (e.currentTarget).style.transform = "translateY(-2px)";
-              (e.currentTarget).style.boxShadow = "0 8px 28px var(--accent-glow-strong)";
+              (e.currentTarget as HTMLAnchorElement).style.background = "var(--accent-dim)";
+              (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(-2px)";
+              (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 8px 28px var(--accent-glow-strong)";
             }}
             onMouseLeave={e => {
-              (e.currentTarget).style.background = "var(--accent)";
-              (e.currentTarget).style.transform = "translateY(0)";
-              (e.currentTarget).style.boxShadow = "none";
+              (e.currentTarget as HTMLAnchorElement).style.background = "var(--accent)";
+              (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(0)";
+              (e.currentTarget as HTMLAnchorElement).style.boxShadow = "none";
             }}
           >
             Comenzar gratis →
