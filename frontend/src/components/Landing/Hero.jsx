@@ -1,11 +1,24 @@
 import { Link } from "react-router-dom";
 
-const BAR_HEIGHTS = [30, 55, 45, 80, 60, 90, 70, 85, 65, 100];
-
 const RECENT_PRACTICES = [
-  { materia: "AUTOMATIZACIÓN", titulo: "Incubadora controlada por Arduino", fecha: "26 mar · 2026" },
-  { materia: "PLC", titulo: "Foco con relevador y contactor", fecha: "13 mar · 2026" },
-  { materia: "CONTROL ANALÓGICO", titulo: "Práctica PID con LM741", fecha: "5 mar · 2026" },
+  { materia: "AUTOMATIZACIÓN", titulo: "Incubadora controlada por Arduino", fecha: "28 mar" },
+  { materia: "PLC", titulo: "Foco con relevador y contactor", fecha: "13 mar" },
+];
+
+const BOVEDA_FILES = [
+  { name: "a5a44ac1-cd0f-4a3...png", color: "#28c840" },
+  { name: "IMG_A4F8BC08-F901...jpg", color: "#28c840" },
+  { name: "237557c0-77bc-483...pdf", color: "#a855f7" },
+];
+
+const NAV_ITEMS = [
+  { label: "Dashboard", active: true },
+  { label: "Nueva práctica", active: false },
+  { label: "Mis prácticas", active: false, section: "INVESTIGACIÓN" },
+  { label: "Proyectos", active: false },
+  { label: "Plantillas", active: false },
+  { label: "Archivos", active: false },
+  { label: "Usuarios", active: false, section: "ADMINISTRACIÓN" },
 ];
 
 export default function Hero() {
@@ -91,14 +104,14 @@ export default function Hero() {
               transition: "background 0.2s, transform 0.15s, box-shadow 0.2s",
             }}
             onMouseEnter={e => {
-              (e.currentTarget).style.background = "var(--accent-dim)";
-              (e.currentTarget).style.transform = "translateY(-2px)";
-              (e.currentTarget).style.boxShadow = "0 8px 28px var(--accent-glow-strong)";
+              e.currentTarget.style.background = "var(--accent-dim)";
+              e.currentTarget.style.transform = "translateY(-2px)";
+              e.currentTarget.style.boxShadow = "0 8px 28px var(--accent-glow-strong)";
             }}
             onMouseLeave={e => {
-              (e.currentTarget).style.background = "var(--accent)";
-              (e.currentTarget).style.transform = "translateY(0)";
-              (e.currentTarget).style.boxShadow = "none";
+              e.currentTarget.style.background = "var(--accent)";
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow = "none";
             }}
           >
             Comenzar gratis →
@@ -113,7 +126,7 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Right — dashboard mockup */}
+      {/* Right — faithful dashboard mockup */}
       <div className="fade-up delay-4" style={{ position: "relative" }}>
         {/* Glow behind mockup */}
         <div style={{
@@ -140,123 +153,216 @@ export default function Hero() {
           {/* Browser bar */}
           <div style={{
             background: "var(--bg)",
-            padding: "0.7rem 1rem",
+            padding: "0.6rem 1rem",
             display: "flex",
             alignItems: "center",
             gap: "0.4rem",
             borderBottom: "1px solid var(--border)",
           }}>
             {[["#ff5f57"], ["#ffbd2e"], ["#28c840"]].map(([c], i) => (
-              <span key={i} style={{ width: 10, height: 10, borderRadius: "50%", background: c, display: "inline-block" }} />
+              <span key={i} style={{ width: 9, height: 9, borderRadius: "50%", background: c, display: "inline-block" }} />
             ))}
             <span style={{
               flex: 1,
               background: "var(--surface)",
               border: "1px solid var(--border)",
               borderRadius: 4,
-              padding: "0.22rem 0.75rem",
+              padding: "0.18rem 0.6rem",
               fontFamily: "'DM Mono', monospace",
-              fontSize: "0.68rem",
+              fontSize: "0.62rem",
               color: "var(--muted)",
-              marginLeft: "0.5rem",
+              marginLeft: "0.4rem",
             }}>
               www.labbitacora.app/dashboard
             </span>
           </div>
 
-          {/* Dashboard content */}
-          <div style={{ padding: "1.25rem" }}>
-            {/* Header row */}
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
-              <span style={{ fontFamily: "'DM Serif Display', serif", fontSize: "1rem", color: "var(--text)" }}>
-                Panel de prácticas
-              </span>
-              <span style={{
-                fontFamily: "'DM Mono', monospace",
-                fontSize: "0.62rem",
-                background: "rgba(168,85,247,0.12)",
-                color: "var(--accent)",
-                padding: "0.2rem 0.6rem",
-                borderRadius: 4,
-                border: "1px solid rgba(168,85,247,0.25)",
-              }}>
-                ● EN VIVO
-              </span>
-            </div>
+          {/* App layout — sidebar + main + right panel */}
+          <div style={{ display: "grid", gridTemplateColumns: "80px 1fr 110px", minHeight: 300 }}>
 
-            {/* Stats */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.6rem", marginBottom: "0.75rem" }}>
-              {[
-                { label: "Prácticas", val: "24", color: "var(--accent)" },
-                { label: "Esta semana", val: "3", color: "var(--lilac)" },
-              ].map(({ label, val, color }) => (
-                <div key={label} style={{
-                  background: "var(--bg)",
-                  border: "1px solid var(--border)",
-                  borderRadius: 8,
-                  padding: "0.875rem",
-                }}>
-                  <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.58rem", color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.3rem" }}>
-                    {label}
-                  </div>
-                  <div style={{ fontSize: "1.5rem", fontWeight: 600, color, lineHeight: 1 }}>{val}</div>
-                </div>
-              ))}
-            </div>
-
-            {/* Mini bar chart */}
+            {/* Sidebar */}
             <div style={{
-              background: "var(--bg)",
-              border: "1px solid var(--border)",
-              borderRadius: 8,
-              padding: "0.875rem",
-              height: 80,
+              background: "rgba(10,9,15,0.8)",
+              borderRight: "1px solid var(--border)",
+              padding: "0.75rem 0",
               display: "flex",
-              alignItems: "flex-end",
-              gap: 3,
-              marginBottom: "0.75rem",
-              overflow: "hidden",
+              flexDirection: "column",
+              gap: "0.1rem",
             }}>
-              {BAR_HEIGHTS.map((h, i) => (
-                <div
-                  key={i}
-                  style={{
-                    flex: 1,
-                    height: `${h}%`,
-                    background: "rgba(168,85,247,0.22)",
-                    borderRadius: "3px 3px 0 0",
-                    borderTop: "2px solid var(--accent)",
-                  }}
-                />
-              ))}
+              {/* Logo */}
+              <div style={{ padding: "0 0.75rem 0.75rem", borderBottom: "1px solid var(--border)", marginBottom: "0.5rem" }}>
+                <div style={{ fontFamily: "'Instrument Sans', sans-serif", fontWeight: 700, fontSize: "0.65rem", color: "var(--text)" }}>
+                  LabBitácora
+                </div>
+              </div>
+
+              {/* Section: MENÚ */}
+              <div style={{ padding: "0 0.75rem", marginBottom: "0.25rem" }}>
+                <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.45rem", color: "var(--muted)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "0.4rem" }}>
+                  Menú
+                </div>
+                {["Dashboard", "Nueva práctica"].map((item, i) => (
+                  <div key={item} style={{
+                    padding: "0.3rem 0.4rem",
+                    borderRadius: 4,
+                    fontSize: "0.58rem",
+                    fontFamily: "'Instrument Sans', sans-serif",
+                    color: i === 0 ? "var(--text)" : "var(--muted)",
+                    background: i === 0 ? "rgba(168,85,247,0.12)" : "transparent",
+                    marginBottom: "0.1rem",
+                  }}>
+                    {i === 0 ? "▪ " : ""}{item}
+                  </div>
+                ))}
+              </div>
+
+              {/* Section: INVESTIGACIÓN */}
+              <div style={{ padding: "0 0.75rem", marginBottom: "0.25rem" }}>
+                <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.45rem", color: "var(--muted)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "0.4rem" }}>
+                  Investigación
+                </div>
+                {["Mis prácticas", "Proyectos", "Plantillas", "Archivos"].map(item => (
+                  <div key={item} style={{
+                    padding: "0.3rem 0.4rem",
+                    borderRadius: 4,
+                    fontSize: "0.58rem",
+                    fontFamily: "'Instrument Sans', sans-serif",
+                    color: "var(--muted)",
+                    marginBottom: "0.1rem",
+                  }}>
+                    {item}
+                  </div>
+                ))}
+              </div>
+
+              {/* Section: ADMINISTRACIÓN */}
+              <div style={{ padding: "0 0.75rem" }}>
+                <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.45rem", color: "var(--muted)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "0.4rem" }}>
+                  Admin
+                </div>
+                <div style={{ padding: "0.3rem 0.4rem", borderRadius: 4, fontSize: "0.58rem", fontFamily: "'Instrument Sans', sans-serif", color: "var(--muted)" }}>
+                  Usuarios
+                </div>
+              </div>
             </div>
 
-            {/* Recent practices list */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
-              {RECENT_PRACTICES.map(({ materia, titulo, fecha }) => (
-                <div
-                  key={titulo}
-                  style={{
-                    background: "var(--bg)",
+            {/* Main content */}
+            <div style={{ padding: "0.75rem", background: "var(--bg)", borderRight: "1px solid var(--border)" }}>
+              {/* Header */}
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.75rem" }}>
+                <div>
+                  <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.45rem", color: "var(--muted)", marginBottom: "0.2rem", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                    Escritorio del investigador
+                  </div>
+                  <div style={{ fontFamily: "'Instrument Sans', sans-serif", fontWeight: 700, fontSize: "0.9rem", color: "var(--text)" }}>
+                    Gestión{" "}
+                    <span style={{ color: "var(--accent)", fontStyle: "italic" }}>Operativa</span>
+                  </div>
+                </div>
+                <div style={{
+                  background: "var(--accent)",
+                  color: "#fff",
+                  borderRadius: 5,
+                  padding: "0.25rem 0.6rem",
+                  fontSize: "0.58rem",
+                  fontFamily: "'Instrument Sans', sans-serif",
+                  fontWeight: 600,
+                }}>
+                  + Nueva Práctica
+                </div>
+              </div>
+
+              {/* Prácticas recientes */}
+              <div style={{ marginBottom: "0.5rem" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.35rem" }}>
+                  <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.5rem", color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                    Prácticas recientes
+                  </span>
+                  <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.5rem", color: "var(--accent)" }}>
+                    Ver todas
+                  </span>
+                </div>
+                {RECENT_PRACTICES.map(({ materia, titulo, fecha }) => (
+                  <div key={titulo} style={{
+                    background: "var(--surface)",
                     border: "1px solid var(--border)",
-                    borderRadius: 6,
-                    padding: "0.6rem 0.875rem",
+                    borderRadius: 5,
+                    padding: "0.45rem 0.6rem",
+                    marginBottom: "0.3rem",
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
-                  }}
-                >
-                  <div>
-                    <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.55rem", color: "var(--accent)", marginBottom: "0.15rem", letterSpacing: "0.06em" }}>
-                      {materia}
+                  }}>
+                    <div>
+                      <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.45rem", color: "var(--accent)", marginBottom: "0.1rem", letterSpacing: "0.06em" }}>
+                        {materia}
+                      </div>
+                      <div style={{ fontSize: "0.62rem", color: "var(--text)", fontFamily: "'Instrument Sans', sans-serif" }}>
+                        {titulo}
+                      </div>
                     </div>
-                    <div style={{ fontSize: "0.72rem", color: "var(--text)" }}>{titulo}</div>
+                    <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.48rem", color: "var(--muted)", whiteSpace: "nowrap", marginLeft: "0.5rem" }}>
+                      {fecha}
+                    </div>
                   </div>
-                  <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.58rem", color: "var(--muted)", whiteSpace: "nowrap", marginLeft: "0.75rem" }}>
-                    {fecha}
+                ))}
+              </div>
+            </div>
+
+            {/* Right panel — profile + bóveda */}
+            <div style={{ background: "var(--bg)", padding: "0.75rem" }}>
+              {/* Profile */}
+              <div style={{ textAlign: "center", marginBottom: "0.75rem", paddingBottom: "0.6rem", borderBottom: "1px solid var(--border)" }}>
+                <div style={{
+                  width: 28, height: 28, borderRadius: "50%",
+                  background: "linear-gradient(135deg, #a855f7, #6366f1)",
+                  margin: "0 auto 0.4rem",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  fontSize: "0.65rem", color: "#fff", fontWeight: 700,
+                  fontFamily: "'Instrument Sans', sans-serif",
+                }}>Z</div>
+                <div style={{ fontSize: "0.62rem", fontWeight: 600, color: "var(--text)", fontFamily: "'Instrument Sans', sans-serif" }}>Enrique Ramírez</div>
+                <div style={{ fontSize: "0.5rem", color: "var(--muted)", fontFamily: "'DM Mono', monospace" }}>Titular de Laboratorio</div>
+              </div>
+
+              {/* Profile fields */}
+              {[
+                { label: "NOMBRE REAL", val: "Enrique Ramírez" },
+                { label: "INSTITUCIÓN", val: "Univ. Euro Hispanoam." },
+                { label: "CARRERA", val: "Ing. Mecatrónica" },
+              ].map(({ label, val }) => (
+                <div key={label} style={{ marginBottom: "0.4rem" }}>
+                  <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.42rem", color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "0.1rem" }}>
+                    {label}
                   </div>
+                  <div style={{ fontSize: "0.55rem", color: "var(--text)", fontFamily: "'Instrument Sans', sans-serif" }}>{val}</div>
                 </div>
               ))}
+
+              {/* Bóveda reciente */}
+              <div style={{ marginTop: "0.6rem", paddingTop: "0.5rem", borderTop: "1px solid var(--border)" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.35rem" }}>
+                  <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.45rem", color: "var(--text)", fontWeight: 600 }}>📁 Bóveda reciente</span>
+                  <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.45rem", color: "var(--accent)" }}>Ver todo</span>
+                </div>
+                {BOVEDA_FILES.map(({ name, color }) => (
+                  <div key={name} style={{
+                    background: "var(--surface)",
+                    border: "1px solid var(--border)",
+                    borderRadius: 4,
+                    padding: "0.3rem 0.45rem",
+                    marginBottom: "0.2rem",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.35rem",
+                  }}>
+                    <span style={{ fontSize: "0.55rem" }}>🖼</span>
+                    <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.45rem", color: "var(--muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      {name}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
