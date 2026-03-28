@@ -64,6 +64,8 @@ Thumbs.db
 *.bat
 LabBitacora_Plan.md
 PracticaNueva_Referencia.jsx
+globalizacion.md
+landing-plan.md
 # Backend Debug & Tools
 backend/debug_*.py
 backend/test_api.py
