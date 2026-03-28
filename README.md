@@ -2,7 +2,7 @@
 
 Sistema de gestión de investigación digital y bitácora técnica para ingeniería. Diseñado para documentar prácticas de laboratorio, proyectos y experimentos con una estética premium y un enfoque **Mobile-First**.
 
-> 🌐 **Demo en vivo**: [labbitacora.vercel.app](https://labbitacora.vercel.app/)  
+> 🌐 **Web**: [www.labbitacora.app](https://www.labbitacora.app)  
 > 📱 **Optimizado para iOS/iPhone & Android**
 
 ## ✨ Características Premium

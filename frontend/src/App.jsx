@@ -15,6 +15,7 @@ import AdminUsers from "./pages/AdminUsers";
 import Proyectos from "./pages/Proyectos";
 import PublicPractica from "./pages/PublicPractica";
 import Plantillas from "./pages/Plantillas";
+import Landing from "./pages/Landing";
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -40,10 +41,11 @@ function AppRoutes() {
   return (
     <AnimatePresence mode="wait">
       <Routes>
-        <Route path="/login" element={user ? <Navigate to="/" replace /> : <Login />} />
-        <Route path="/register" element={user ? <Navigate to="/" replace /> : <Register />} />
-        <Route path="/forgot-password" element={user ? <Navigate to="/" replace /> : <ForgotPassword />} />
+        <Route path="/login" element={user ? <Navigate to="/dashboard" replace /> : <Login />} />
+        <Route path="/register" element={user ? <Navigate to="/dashboard" replace /> : <Register />} />
+        <Route path="/forgot-password" element={user ? <Navigate to="/dashboard" replace /> : <ForgotPassword />} />
         <Route path="/public/:id" element={<PublicPractica />} />
+        <Route path="/" element={user ? <Navigate to="/dashboard" replace /> : <Landing />} />
         <Route
           element={
             <ProtectedRoute>
@@ -51,7 +53,7 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         >
-          <Route path="/" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/practicas" element={<Practicas />} />
           <Route path="/practicas/nueva" element={<PracticaNueva />} />
           <Route path="/practicas/:id" element={<PracticaDetalle />} />

@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 const NAV = [
   { section: "Menú Principal", items: [
-    { icon: "▦", label: "Dashboard", to: "/" },
+    { icon: "▦", label: "Dashboard", to: "/dashboard" },
     { icon: "+", label: "Nueva práctica", to: "/practicas/nueva" },
   ]},
   { section: "Investigación", items: [
