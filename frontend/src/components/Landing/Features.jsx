@@ -1,3 +1,5 @@
+import { motion } from "framer-motion";
+
 export default function Features() {
   return (
     <section id="features" className="py-32 bg-[#040405] relative overflow-hidden text-white">
