@@ -1,4 +1,5 @@
 from uuid import UUID
+import logging
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, status, Request
 from sqlalchemy.orm import Session
@@ -13,6 +14,9 @@ from app.core.cloudinary import upload_file, delete_file
 from app.core.limiter import limiter
 
 router = APIRouter(tags=["archivos"])
+logger = logging.getLogger(__name__)
+
+MAX_UPLOAD_SIZE_BYTES = 25 * 1024 * 1024
 
 
 @router.post(
@@ -54,12 +58,26 @@ async def upload_archivo(
             detail="Solo se permiten imágenes, videos y PDFs"
         )
 
-    # Read file and upload to Cloudinary
-    file_bytes = await file.read()
+    # Read file in chunks and enforce a hard cap to prevent memory abuse.
+    total_size = 0
+    file_buffer = bytearray()
+    while True:
+        chunk = await file.read(1024 * 1024)
+        if not chunk:
+            break
+        total_size += len(chunk)
+        if total_size > MAX_UPLOAD_SIZE_BYTES:
+            raise HTTPException(
+                status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                detail="El archivo excede el límite de 25MB",
+            )
+        file_buffer.extend(chunk)
+
+    file_bytes = bytes(file_buffer)
     tamano_kb = len(file_bytes) // 1024
     filename = file.filename or "archivo"
     cloud_result = upload_file(file_bytes, filename, folder=f"labbitacora/{practica_id}")
-    print(f"☁️  Cloudinary Upload Success: {cloud_result['url']}")
+    logger.info("Cloudinary upload success")
 
     # Save to database
     archivo = Archivo(
@@ -93,15 +111,13 @@ def get_all_archivos(
     """
     Retrieve all files across all practices belonging to the current user.
     """
-    # Simplified query for debugging
-    archivos = db.query(Archivo).all()
-    # Filter in memory for now to be 100% sure what's happening
-    user_files = [a for a in archivos if a.practica and a.practica.usuario_id == current_user.id]
-    
-    print(f"📁 DEBUG: Total files in DB: {len(archivos)}")
-    print(f"📁 DEBUG: Files for User {current_user.id}: {len(user_files)}")
-    
-    return user_files
+    return (
+        db.query(Archivo)
+        .join(Practica, Archivo.practica_id == Practica.id)
+        .filter(Practica.usuario_id == current_user.id)
+        .order_by(Archivo.created_at.desc())
+        .all()
+    )
 
 
 @router.delete("/archivos/{archivo_id}", status_code=status.HTTP_204_NO_CONTENT)

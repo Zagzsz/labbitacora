@@ -12,3 +12,6 @@ venv/
 # Cloudinary / Secrets
 .env
 .python-version
+
+# Local debug helpers
+debug_*.py

@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+import logging
 
 from app.core.config import get_settings
 from app.core.security import hash_password
@@ -6,6 +7,7 @@ from app.db.session import SessionLocal
 from app.models.usuario import Usuario
 
 settings = get_settings()
+logger = logging.getLogger(__name__)
 
 
 def init_db() -> None:
@@ -24,15 +26,15 @@ def init_db() -> None:
             )
             db.add(admin)
             db.commit()
-            print(f"✅ Usuario administrador '{settings.ADMIN_USERNAME}' creado.")
+            logger.info("Admin user created")
         else:
             # Asegurar que el admin existente tenga los flags correctos
             if not admin.is_admin or not admin.is_active:
                 admin.is_admin = True
                 admin.is_active = True
                 db.commit()
-                print(f"ℹ️ Flags de usuario administrador '{settings.ADMIN_USERNAME}' actualizados.")
+                logger.info("Admin flags updated")
             else:
-                print(f"ℹ️ El usuario administrador '{settings.ADMIN_USERNAME}' ya existe.")
+                logger.info("Admin user already exists")
     finally:
         db.close()

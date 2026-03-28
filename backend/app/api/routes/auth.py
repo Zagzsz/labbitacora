@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta, timezone
 import random
 import uuid
+import logging
 
 from fastapi import APIRouter, Depends, HTTPException, status, Request
 from sqlalchemy.orm import Session
@@ -13,13 +14,15 @@ from app.schemas.auth import (
     TokenResponse, 
     UserResponse, 
     UserUpdate,
-    RegisterRequest
+    RegisterRequest,
+    AdminResetPasswordRequest,
 )
 from app.api.deps import get_current_user, get_current_admin_user
 from app.core.limiter import limiter
 # from app.core.email import send_verification_code # Eliminado
 
 router = APIRouter(prefix="/auth", tags=["auth"])
+logger = logging.getLogger(__name__)
 
 
 @router.get("/ping")
@@ -30,30 +33,30 @@ def ping():
 @router.post("/login", response_model=TokenResponse)
 @limiter.limit("5/minute")
 def login(data: LoginRequest, request: Request, db: Session = Depends(get_db)):
-    print(f"🔑 Login attempt: {data.username}")
+    logger.info("Login attempt")
     user = db.query(Usuario).filter(Usuario.username == data.username).first()
     if not user:
-        print(f"❌ Login failed: User '{data.username}' not found")
+        logger.warning("Login failed: user not found")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Credenciales incorrectas",
         )
     
     if not user.is_active:
-        print(f"❌ Login failed: Account deactivated for '{data.username}'")
+        logger.warning("Login failed: account deactivated")
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Cuenta desactivada. Contacta al administrador.",
         )
     
     if not verify_password(data.password, user.hashed_password):
-        print(f"❌ Login failed: Password mismatch for '{data.username}'")
+        logger.warning("Login failed: password mismatch")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Credenciales incorrectas",
         )
     
-    print(f"✅ Login success: {data.username}")
+    logger.info("Login success")
     token = create_access_token({"sub": str(user.id), "is_admin": user.is_admin})
     return TokenResponse(access_token=token)
 
@@ -69,7 +72,7 @@ def register(data: RegisterRequest, request: Request, db: Session = Depends(get_
             raise HTTPException(status_code=409, detail="El nombre de usuario ya está en uso")
         
         # Reintento de usuario inactivo: actualizar contraseña y reactivar directamente
-        print(f"🔄 Reactivando usuario inactivo desde registro: {data.username}")
+        logger.info("Reactivating inactive user from register")
         user.hashed_password = hash_password(data.password)
         user.is_active = True
         db.commit()
@@ -77,7 +80,7 @@ def register(data: RegisterRequest, request: Request, db: Session = Depends(get_
         return user
 
     # Crear nuevo usuario activo
-    print(f"🆕 Creando nuevo usuario activo: {data.username}")
+    logger.info("Creating new active user")
     new_user = Usuario(
         username=data.username,
         hashed_password=hash_password(data.password),
@@ -93,18 +96,15 @@ def register(data: RegisterRequest, request: Request, db: Session = Depends(get_
 @router.patch("/users/{user_id}/reset-password", response_model=UserResponse)
 def admin_reset_password(
     user_id: uuid.UUID,
+    data: AdminResetPasswordRequest,
     db: Session = Depends(get_db),
     admin_user: Usuario = Depends(get_current_admin_user)
 ):
     user = db.query(Usuario).filter(Usuario.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
-    
-    new_pass = data.get("new_password")
-    if not new_pass or len(new_pass) < 6:
-        raise HTTPException(status_code=400, detail="La contraseña debe tener al menos 6 caracteres")
         
-    user.hashed_password = hash_password(new_pass)
+    user.hashed_password = hash_password(data.new_password)
     db.commit()
     db.refresh(user)
     return user
