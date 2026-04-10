@@ -329,7 +329,7 @@ export default function PracticaDetalle() {
                   </p>
                 ) : (
                   (p.archivos || []).map((a) => (
-                    <div key={a.id} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                    <div key={a.id} style={{ display: "flex", flexDirection: "column", gap: 10, minWidth: 0 }}>
                       <div className="glass" style={{
                         borderRadius: 12, padding: "10px", position: "relative",
                         display: "flex", gap: 12, alignItems: "center", overflow: "hidden"
@@ -351,7 +351,7 @@ export default function PracticaDetalle() {
                             {a.tipo} • {a.tamano_kb} KB
                           </p>
                         </div>
-                        <div style={{ display: "flex", gap: 4 }}>
+                        <div style={{ display: "flex", gap: 4, flexShrink: 0 }}>
                           <a href={a.url_cloudinary} target="_blank" rel="noopener noreferrer" 
                             style={{ background: "rgba(255,255,255,0.05)", padding: "6px", borderRadius: 8, color: "var(--text-muted)", fontSize: 12, textDecoration: "none" }}>
                             ↗
