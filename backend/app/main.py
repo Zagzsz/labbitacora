@@ -38,7 +38,7 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 origins = [
     settings.FRONTEND_URL,
     "https://www.labbitacora.app",
-    "https://ww.labbitacora.vercel.app",
+    "https://www.labbitacora.vercel.app",
     "https://labbitacora.app",
     "http://localhost:5173",
     "http://127.0.0.1:5173",
