@@ -2,10 +2,8 @@
 
 Sistema de gestión de investigación digital y bitácora técnica para ingeniería. Diseñado para documentar prácticas de laboratorio, proyectos y experimentos con una estética premium y un enfoque **Mobile-First**.
 
-> 🌐 **Web**: [www.labbitacora.app](https://www.labbitacora.app)  
-> 📱 **Optimizado para iOS/iPhone & Android**
 
-## ✨ Características Premium
+## ✨ Características
 
 - 📱 **Diseño Responsivo Total**: Interfaz fluida adaptada a dispositivos móviles con layouts dinámicos y navegación optimizada.
 - 📊 **Telemetría Interactiva**: Gráficas de líneas dinámicas utilizando **Recharts** para visualización de mediciones experimentales.
@@ -14,7 +12,7 @@ Sistema de gestión de investigación digital y bitácora técnica para ingenier
 - 📋 **Protocolos de Investigación**: Sistema de plantillas con campos dinámicos para estandarizar el registro según la disciplina (PLC, Programación, etc.).
 - 👥 **Gestión Multi-Usuario**: Roles de Administrador y Usuario con control de acceso por JWT.
 
-## 🛠️ Stack Tecnológico
+## 🛠️ Stack
 
 | Capa | Tecnología |
 |---|---|
